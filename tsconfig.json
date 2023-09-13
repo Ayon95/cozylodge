@@ -1,0 +1,39 @@
+{
+	"compilerOptions": {
+		"target": "ES2020",
+		"useDefineForClassFields": true,
+		"lib": ["ES2020", "DOM", "DOM.Iterable"],
+		"module": "ESNext",
+		"skipLibCheck": true,
+
+		/* Bundler mode */
+		"moduleResolution": "bundler",
+		"allowImportingTsExtensions": true,
+		"resolveJsonModule": true,
+		"isolatedModules": true,
+		"noEmit": true,
+		"jsx": "react-jsx",
+
+		/* Linting */
+		"strict": true,
+		"noUnusedLocals": true,
+		"noUnusedParameters": true,
+		"noFallthroughCasesInSwitch": true,
+
+		"types": ["node", "vitest/globals", "@testing-library/jest-dom"],
+		"baseUrl": "src",
+		"paths": {
+			"@/features/*": ["features/*"],
+			"@/hooks/*": ["hooks/*"],
+			"@/pages/*": ["pages/*"],
+			"@/ui/*": ["ui/*"],
+			"@/utils/*": ["utils/*"],
+			"@/data/*": ["data/*"],
+			"@/services/*": ["services/*"],
+			"@/styles/*": ["styles/*"],
+			"@/types/*": ["types/*"]
+		}
+	},
+	"include": ["src"],
+	"references": [{ "path": "./tsconfig.node.json" }]
+}
