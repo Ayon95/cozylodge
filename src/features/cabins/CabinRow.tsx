@@ -12,7 +12,7 @@ function CabinRow({ cabin }: TableRowProps) {
 	return (
 		<StyledTableRow role="row">
 			<td role="cell">
-				<Img src={image_url} alt={description} />
+				<Img src={image_url} alt={`${name}, ${description}`} />
 			</td>
 			<Cabin role="cell" data-cell="cabin">
 				{name}

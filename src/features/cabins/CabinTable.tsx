@@ -18,7 +18,9 @@ function CabinTable() {
 				</caption>
 				<thead role="rowgroup">
 					<tr role="row">
-						<th role="columnheader"></th>
+						<th role="columnheader">
+							<span className="sr-only">Image</span>
+						</th>
 						<th role="columnheader">Cabin</th>
 						<th role="columnheader">Capacity</th>
 						<th role="columnheader">Price</th>
