@@ -1,9 +1,7 @@
-import { cleanup, render, screen } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 
-import MainNav from '@/ui/MainNav';
-
-afterEach(() => cleanup());
+import MainNav from '@/ui/layout/MainNav';
 
 describe('Main Navigation', () => {
 	it('should have Overview link that goes to Dashboard page', () => {

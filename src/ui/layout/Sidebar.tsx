@@ -1,6 +1,6 @@
 import { styled } from 'styled-components';
 import Logo from '@/ui/Logo';
-import MainNav from '@/ui/MainNav';
+import MainNav from '@/ui/layout/MainNav';
 
 export default function Sidebar() {
 	return (
