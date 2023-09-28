@@ -31,7 +31,8 @@
 			"@/data/*": ["data/*"],
 			"@/services/*": ["services/*"],
 			"@/styles/*": ["styles/*"],
-			"@/types/*": ["types/*"]
+			"@/types/*": ["types/*"],
+			"@/test/*": ["test/*"]
 		}
 	},
 	"include": ["src"],
