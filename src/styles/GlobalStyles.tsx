@@ -5,16 +5,6 @@ export default createGlobalStyle`
 /* Colors adapted from https://tailwindcss.com/docs/customizing-colors */
 
 :root {
-  /* Indigo */
-  --color-brand-50: #eef2ff;
-  --color-brand-100: #e0e7ff;
-  --color-brand-200: #c7d2fe;
-  --color-brand-500: #6366f1;
-  --color-brand-600: #4f46e5;
-  --color-brand-700: #4338ca;
-  --color-brand-800: #3730a3;
-  --color-brand-900: #312e81;
-
   /* Emerald */
   --color-brand-50: #ecfdf5;
   --color-brand-100: #d1fae5;
@@ -208,6 +198,10 @@ FOR DARK MODE
   clip: rect(1px, 1px, 1px, 1px);
   overflow: hidden;
   white-space: nowrap;
+}
+
+.text-center {
+  text-align: center;
 }
 
 `;

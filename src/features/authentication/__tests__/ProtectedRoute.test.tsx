@@ -7,6 +7,7 @@ import supabase from '@/services/supabase';
 import { nonExistentSession, userSession } from '@/test/fixtures/authentication';
 import Login from '@/pages/Login';
 import Dashboard from '@/pages/Dashboard';
+import AuthLayout from '@/ui/layout/AuthLayout';
 
 beforeEach(() => {
 	renderWithQueryClient(
@@ -21,7 +22,14 @@ beforeEach(() => {
 				>
 					<Route path="dashboard" element={<Dashboard />} />
 				</Route>
-				<Route path="login" element={<Login />} />
+				<Route
+					path="login"
+					element={
+						<AuthLayout>
+							<Login />
+						</AuthLayout>
+					}
+				/>
 			</Routes>
 		</MemoryRouter>
 	);

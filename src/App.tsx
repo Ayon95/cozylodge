@@ -11,9 +11,11 @@ import Settings from '@/pages/Settings';
 import Account from '@/pages/Account';
 import NewUsers from './pages/Users';
 import Login from '@/pages/Login';
+import Signup from '@/pages/Signup';
 import PageNotFound from '@/pages/PageNotFound';
 import AppLayout from '@/ui/layout/AppLayout';
 import ProtectedRoute from '@/features/authentication/ProtectedRoute';
+import AuthLayout from '@/ui/layout/AuthLayout';
 
 const queryClient = new QueryClient();
 
@@ -39,7 +41,22 @@ function App() {
 						<Route path="account" element={<Account />} />
 						<Route path="users" element={<NewUsers />} />
 					</Route>
-					<Route path="login" element={<Login />} />
+					<Route
+						path="login"
+						element={
+							<AuthLayout>
+								<Login />
+							</AuthLayout>
+						}
+					/>
+					<Route
+						path="signup"
+						element={
+							<AuthLayout>
+								<Signup />
+							</AuthLayout>
+						}
+					/>
 					<Route path="*" element={<PageNotFound />} />
 				</Routes>
 			</BrowserRouter>
