@@ -25,13 +25,6 @@ describe('Main Navigation', () => {
 		expect(overviewLink).toHaveAttribute('href', '/cabins');
 	});
 
-	it('should have Users link that goes to Users page', () => {
-		render(<MainNav />, { wrapper: BrowserRouter });
-		const overviewLink = screen.getByRole('link', { name: /users/i });
-		expect(overviewLink).toBeInTheDocument();
-		expect(overviewLink).toHaveAttribute('href', '/users');
-	});
-
 	it('should have Settings link that goes to Settings page', () => {
 		render(<MainNav />, { wrapper: BrowserRouter });
 		const overviewLink = screen.getByRole('link', { name: /settings/i });

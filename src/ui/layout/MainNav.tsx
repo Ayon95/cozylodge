@@ -4,7 +4,6 @@ import {
 	HiOutlineSquares2X2,
 	HiOutlineCalendarDays,
 	HiOutlineHomeModern,
-	HiOutlineUsers,
 	HiOutlineCog8Tooth,
 } from 'react-icons/hi2';
 
@@ -28,12 +27,6 @@ export default function MainNav() {
 					<StyledNavLink to="/cabins">
 						<HiOutlineHomeModern />
 						Cabins
-					</StyledNavLink>
-				</li>
-				<li>
-					<StyledNavLink to="/users">
-						<HiOutlineUsers />
-						Users
 					</StyledNavLink>
 				</li>
 				<li>
