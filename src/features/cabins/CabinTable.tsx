@@ -1,15 +1,13 @@
-import { useQuery } from '@tanstack/react-query';
 import styled from 'styled-components';
 
-import Spinner from '@/ui/spinner/Spinner';
 import TableRow from './CabinRow';
-import { getCabins } from '@/services/apiCabins';
+import { Tables } from '@/types/database';
 
-function CabinTable() {
-	const { data: cabins, isLoading } = useQuery({ queryKey: ['cabins'], queryFn: getCabins });
+interface CabinTableProps {
+	cabins: Tables<'cabin'>[];
+}
 
-	if (isLoading) return <Spinner />;
-
+function CabinTable({ cabins }: CabinTableProps) {
 	return (
 		<TableContainer role="region" tabIndex={0} aria-labelledby="cabinTableCaption">
 			<Table role="table">
@@ -28,7 +26,7 @@ function CabinTable() {
 					</tr>
 				</thead>
 				<tbody role="rowgroup">
-					{cabins?.map(cabin => (
+					{cabins.map(cabin => (
 						<TableRow cabin={cabin} key={cabin.id} />
 					))}
 				</tbody>

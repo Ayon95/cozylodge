@@ -1,7 +1,9 @@
 import supabase from './supabase';
 
-export async function getCabins() {
-	const { data: cabins, error } = await supabase.from('cabin').select('*');
+export async function getCabins(userId: string | null | undefined) {
+	if (!userId) return [];
+
+	const { data: cabins, error } = await supabase.from('cabin').select('*').eq('user_id', userId);
 
 	if (error) {
 		console.error(error);

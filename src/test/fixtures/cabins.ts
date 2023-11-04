@@ -10,6 +10,7 @@ export const cabins: Tables<'cabin'>[] = [
 		discount: 50,
 		description: 'A small luxury cabin in the woods',
 		image_url: 'test url 1',
+		user_id: 'test id',
 	},
 	{
 		id: 2,
@@ -20,5 +21,6 @@ export const cabins: Tables<'cabin'>[] = [
 		discount: 75,
 		description: 'Comfortable cabin for a small family',
 		image_url: 'test url 2',
+		user_id: 'test id',
 	},
 ];

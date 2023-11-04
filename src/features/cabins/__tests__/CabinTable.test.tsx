@@ -6,7 +6,7 @@ import { cabins } from '@/test/fixtures/cabins';
 
 describe('CabinTable', () => {
 	it('should have all column headers in the correct order', async () => {
-		renderWithQueryClient(<CabinTable />);
+		renderWithQueryClient(<CabinTable cabins={cabins} />);
 
 		const columnHeaders = await screen.findAllByRole('columnheader');
 
@@ -18,7 +18,7 @@ describe('CabinTable', () => {
 	});
 
 	it('should have rows with cabin details in the correct order', async () => {
-		renderWithQueryClient(<CabinTable />);
+		renderWithQueryClient(<CabinTable cabins={cabins} />);
 
 		const cabinRows = await screen.findAllByRole('row');
 		// The first row contains column headers

@@ -200,6 +200,10 @@ FOR DARK MODE
   white-space: nowrap;
 }
 
+.mt-1 {
+  margin-top: 1rem;
+}
+
 .text-center {
   text-align: center;
 }
