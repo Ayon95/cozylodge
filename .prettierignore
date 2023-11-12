@@ -1,0 +1,4 @@
+dist
+.github
+.prettierrc
+*.json

@@ -104,7 +104,7 @@ export interface Database {
 						columns: ['user_id'];
 						referencedRelation: 'users';
 						referencedColumns: ['id'];
-					}
+					},
 				];
 			};
 			cabin: {
@@ -147,7 +147,7 @@ export interface Database {
 						columns: ['user_id'];
 						referencedRelation: 'users';
 						referencedColumns: ['id'];
-					}
+					},
 				];
 			};
 			guest: {
@@ -187,7 +187,7 @@ export interface Database {
 						columns: ['user_id'];
 						referencedRelation: 'users';
 						referencedColumns: ['id'];
-					}
+					},
 				];
 			};
 			settings: {
@@ -224,7 +224,7 @@ export interface Database {
 						columns: ['user_id'];
 						referencedRelation: 'users';
 						referencedColumns: ['id'];
-					}
+					},
 				];
 			};
 		};
@@ -283,7 +283,7 @@ export interface Database {
 						columns: ['owner'];
 						referencedRelation: 'users';
 						referencedColumns: ['id'];
-					}
+					},
 				];
 			};
 			migrations: {
@@ -350,7 +350,7 @@ export interface Database {
 						columns: ['bucket_id'];
 						referencedRelation: 'buckets';
 						referencedColumns: ['id'];
-					}
+					},
 				];
 			};
 		};
