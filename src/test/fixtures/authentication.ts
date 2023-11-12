@@ -1,4 +1,4 @@
-import { AuthError, AuthTokenResponse } from '@supabase/supabase-js';
+import { AuthTokenResponse } from '@supabase/supabase-js';
 
 const user = {
 	id: 'testId',

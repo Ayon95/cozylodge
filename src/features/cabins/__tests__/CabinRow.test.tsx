@@ -31,6 +31,7 @@ describe('CabinRow', () => {
 			description: 'A small luxury cabin in the woods',
 			discount: 0,
 			image_url: 'test url 1',
+			user_id: 'test id',
 		};
 
 		render(
