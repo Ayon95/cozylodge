@@ -92,3 +92,6 @@ jobs:
           # All dependencies have been installed already above
           install: false
           start: npm run dev
+        env:
+          CYPRESS_user_email: ${{ secrets.CYPRESS_USER_EMAIL }}
+          CYPRESS_user_password: ${{ secrets.CYPRESS_USER_PASSWORD }}
