@@ -91,6 +91,7 @@ jobs:
         with:
           # All dependencies have been installed already above
           install: false
+          browser: chrome
           start: npm run dev
         env:
           CYPRESS_user_email: ${{ secrets.CYPRESS_USER_EMAIL }}
