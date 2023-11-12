@@ -79,6 +79,7 @@ function LoginForm() {
 				<Button size="large" disabled={loginMutation.isLoading}>
 					{loginMutation.isLoading ? <SpinnerMini /> : 'Login'}
 				</Button>
+				{loginMutation.isError && <p className="errorMessage">{loginMutation.error.message}</p>}
 			</FormControl>
 		</Form>
 	);
