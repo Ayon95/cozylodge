@@ -23,6 +23,9 @@ function CabinTable({ cabins }: CabinTableProps) {
 						<th role="columnheader">Capacity</th>
 						<th role="columnheader">Price</th>
 						<th role="columnheader">Discount</th>
+						<th role="columnheader">
+							<span className="sr-only">Actions</span>
+						</th>
 					</tr>
 				</thead>
 				<tbody role="rowgroup">
@@ -83,7 +86,7 @@ const Table = styled.table`
 			grid-column: 1/-1;
 		}
 
-		td:not(:first-child)::before {
+		td:not(:first-child, :last-child)::before {
 			content: attr(data-cell) ': ';
 			font-weight: bold;
 			text-transform: capitalize;

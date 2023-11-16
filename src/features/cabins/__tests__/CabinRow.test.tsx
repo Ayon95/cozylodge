@@ -1,12 +1,14 @@
-import { render, screen, within } from '@testing-library/react';
+import { screen, within } from '@testing-library/react';
+
 import CabinRow from '../CabinRow';
 import { Tables } from '@/types/database';
 import { cabins } from '@/test/fixtures/cabins';
+import { renderWithQueryClient } from '@/test/utils';
 
 describe('CabinRow', () => {
 	it('should have image cell with correct src and alt attributes', () => {
 		const cabin = cabins[0];
-		render(
+		renderWithQueryClient(
 			<table>
 				<tbody>
 					<CabinRow cabin={cabin} />
@@ -19,6 +21,22 @@ describe('CabinRow', () => {
 
 		expect(image).toHaveAttribute('src', cabin.image_url);
 		expect(image).toHaveAttribute('alt', `${cabin.name}, ${cabin.description}`);
+	});
+
+	it('should have an actions cell with a delete button', () => {
+		const cabin = cabins[0];
+
+		renderWithQueryClient(
+			<table>
+				<tbody>
+					<CabinRow cabin={cabin} />
+				</tbody>
+			</table>
+		);
+
+		const actionsCell = screen.getAllByRole('cell')[5];
+
+		expect(within(actionsCell).getByRole('button', { name: /delete/i })).toBeInTheDocument();
 	});
 
 	it('should show dash in discount cell if cabin has no discount', () => {
@@ -34,7 +52,7 @@ describe('CabinRow', () => {
 			user_id: 'test id',
 		};
 
-		render(
+		renderWithQueryClient(
 			<table>
 				<tbody>
 					<CabinRow cabin={cabinWithoutDiscount} />

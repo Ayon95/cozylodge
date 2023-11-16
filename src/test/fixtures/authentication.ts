@@ -1,6 +1,6 @@
 import { AuthTokenResponse } from '@supabase/supabase-js';
 
-const user = {
+export const user = {
 	id: 'testId',
 	aud: 'authenticated',
 	role: 'authenticated',

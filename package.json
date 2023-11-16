@@ -12,7 +12,9 @@
 		"preview": "vite preview",
 		"test": "vitest",
 		"cypress:open": "cypress open",
-		"cypress:run": "cypress run"
+		"cypress:run": "cypress run",
+		"supabase:diff": "npx supabase db diff --schema public",
+		"supabase:types": "npx supabase gen types typescript --local"
 	},
 	"dependencies": {
 		"@hookform/resolvers": "^3.3.1",
