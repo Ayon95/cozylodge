@@ -1,23 +1,20 @@
 import { HiOutlineArrowRightOnRectangle } from 'react-icons/hi2';
-import styled from 'styled-components';
 import { useLogout } from './hooks/useLogout';
 import SpinnerMini from '@/ui/spinner/SpinnerMini';
+import ButtonIconText from '@/ui/button/ButtonIconText';
 
 function Logout() {
 	const { mutate, isLoading } = useLogout();
 	return (
-		<StyledButton onClick={() => mutate()} disabled={isLoading}>
-			{isLoading ? <SpinnerMini /> : <HiOutlineArrowRightOnRectangle />}
+		<ButtonIconText onClick={() => mutate()} disabled={isLoading}>
+			{isLoading ? (
+				<SpinnerMini aria-hidden="true" />
+			) : (
+				<HiOutlineArrowRightOnRectangle aria-hidden="true" />
+			)}
 			<span>Logout</span>
-		</StyledButton>
+		</ButtonIconText>
 	);
 }
 
 export default Logout;
-
-const StyledButton = styled.button`
-	display: flex;
-	align-items: center;
-	gap: 0.4rem;
-	border: none;
-`;

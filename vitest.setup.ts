@@ -4,20 +4,32 @@
 // learn more: https://github.com/testing-library/jest-dom
 import '@testing-library/jest-dom';
 import fetch from 'cross-fetch';
-import { afterAll, afterEach, beforeAll } from 'vitest';
+import { afterAll, afterEach, beforeAll, vi } from 'vitest';
 import { cleanup } from '@testing-library/react';
-import { setupServer } from 'msw/node';
 
-import { handlers } from './src/test/mocks/handlers';
+import { mockServer } from './src/test/mocks/server';
 
 // fetch polyfill for Node environment
 global.fetch = fetch;
 
-export const server = setupServer(...handlers);
+// Mocking window.matchMedia() since it is not implemented in JSDOM
+Object.defineProperty(window, 'matchMedia', {
+	writable: true,
+	value: vi.fn().mockImplementation(query => ({
+		matches: false,
+		media: query,
+		onchange: null,
+		addListener: vi.fn(), // deprecated
+		removeListener: vi.fn(), // deprecated
+		addEventListener: vi.fn(),
+		removeEventListener: vi.fn(),
+		dispatchEvent: vi.fn(),
+	})),
+});
 
-beforeAll(() => server.listen());
+beforeAll(() => mockServer.listen());
 afterEach(() => {
 	cleanup();
-	server.resetHandlers();
+	mockServer.resetHandlers();
 });
-afterAll(() => server.close());
+afterAll(() => mockServer.close());

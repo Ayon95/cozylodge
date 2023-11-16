@@ -15,6 +15,7 @@ describe('CabinTable', () => {
 		expect(columnHeaders[2]).toHaveTextContent(/capacity/i);
 		expect(columnHeaders[3]).toHaveTextContent(/price/i);
 		expect(columnHeaders[4]).toHaveTextContent(/discount/i);
+		expect(columnHeaders[5]).toHaveTextContent(/actions/i);
 	});
 
 	it('should have rows with cabin details in the correct order', async () => {
