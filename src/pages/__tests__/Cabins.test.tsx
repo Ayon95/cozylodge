@@ -9,6 +9,8 @@ import supabase from '@/services/supabase';
 import { userSession } from '@/test/fixtures/authentication';
 import { CABINS_BASE_URL } from '@/utils/constants';
 import { mockServer } from '@/test/mocks/server';
+import { db } from '@/test/mocks/db';
+import { cabins } from '@/test/fixtures/cabins';
 
 const deleteButtonRegex = /delete/i;
 
@@ -21,7 +23,7 @@ describe('Cabins', () => {
 		expect(noCabinsTextElement).toBeInTheDocument();
 	});
 
-	it('should show deletion success message when a cabin is deleted', async () => {
+	it('should remove the deleted cabin and show a deletion success message', async () => {
 		// Setting logged in user
 		vi.spyOn(supabase.auth, 'getSession').mockResolvedValueOnce(userSession);
 
@@ -43,6 +45,10 @@ describe('Cabins', () => {
 		const toast = await screen.findByText(/cabin deleted successfully!/i);
 
 		expect(toast).toBeInTheDocument();
+		expect(cabinRows[1]).not.toBeInTheDocument();
+
+		// Reset cabin data in the database by adding back the first cabin
+		db.cabin.create(cabins[0]);
 	});
 
 	it('should show deletion error message if a cabin cannot be deleted', async () => {
