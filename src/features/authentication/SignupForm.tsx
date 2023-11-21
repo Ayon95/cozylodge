@@ -4,7 +4,6 @@ import { useForm } from 'react-hook-form';
 
 import { Button } from '@/ui/button/Button';
 import Form from '@/ui/form/Form';
-import Input from '../../ui/form/Input';
 import FormControl from '@/ui/form/FormControl';
 import SpinnerMini from '@/ui/spinner/SpinnerMini';
 import { MIN_FULL_NAME_LENGTH, MIN_PASSWORD_LENGTH } from '@/utils/constants';
@@ -65,7 +64,7 @@ function SignupForm() {
 				labelInfo={{ label: 'Full Name', inputId: 'fullName' }}
 				error={formErrors.fullName?.message}
 			>
-				<Input
+				<input
 					{...form.register('fullName')}
 					type="text"
 					id="fullName"
@@ -77,7 +76,7 @@ function SignupForm() {
 				labelInfo={{ label: 'Email Address', inputId: 'email' }}
 				error={formErrors.email?.message}
 			>
-				<Input
+				<input
 					{...form.register('email')}
 					type="email"
 					id="email"
@@ -90,7 +89,7 @@ function SignupForm() {
 				labelInfo={{ label: 'Password', inputId: 'password' }}
 				error={formErrors.password?.message}
 			>
-				<Input
+				<input
 					{...form.register('password')}
 					type="password"
 					id="password"
@@ -103,7 +102,7 @@ function SignupForm() {
 				labelInfo={{ label: 'Confirm Password', inputId: 'confirmPassword' }}
 				error={formErrors.confirmPassword?.message}
 			>
-				<Input
+				<input
 					{...form.register('confirmPassword')}
 					type="password"
 					id="confirmPassword"

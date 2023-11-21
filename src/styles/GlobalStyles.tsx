@@ -117,6 +117,14 @@ select:focus {
   outline-offset: -1px;
 }
 
+input,
+textarea {
+  padding: 0.45em 0.9em;
+	border: 1px solid var(--color-grey-300);
+	border-radius: var(--border-radius-sm);
+	box-shadow: var(--shadow-sm);
+}
+
 button:has(svg) {
   line-height: 0;
 }

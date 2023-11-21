@@ -4,7 +4,6 @@ import { useForm } from 'react-hook-form';
 
 import { Button } from '@/ui/button/Button';
 import Form from '@/ui/form/Form';
-import Input from '../../ui/form/Input';
 import FormControl from '@/ui/form/FormControl';
 import SpinnerMini from '@/ui/spinner/SpinnerMini';
 import { MIN_PASSWORD_LENGTH } from '@/utils/constants';
@@ -51,7 +50,7 @@ function LoginForm() {
 				labelInfo={{ label: 'Email Address', inputId: 'email' }}
 				error={formErrors.email?.message}
 			>
-				<Input
+				<input
 					{...form.register('email')}
 					type="email"
 					id="email"
@@ -66,7 +65,7 @@ function LoginForm() {
 				labelInfo={{ label: 'Password', inputId: 'password' }}
 				error={formErrors.password?.message}
 			>
-				<Input
+				<input
 					{...form.register('password')}
 					type="password"
 					id="password"
