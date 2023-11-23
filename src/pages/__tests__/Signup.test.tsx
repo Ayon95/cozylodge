@@ -8,7 +8,7 @@ import Dashboard from '../Dashboard';
 import { authResponse } from '@/test/fixtures/authentication';
 import Signup from '../Signup';
 
-beforeEach(() => {
+function setup() {
 	renderWithQueryClient(
 		<MemoryRouter initialEntries={['/signup']}>
 			<Routes>
@@ -17,7 +17,7 @@ beforeEach(() => {
 			</Routes>
 		</MemoryRouter>
 	);
-});
+}
 
 afterEach(() => {
 	vi.restoreAllMocks();
@@ -25,11 +25,13 @@ afterEach(() => {
 
 describe('Signup', () => {
 	it('should have a page title and link to login page', () => {
+		setup();
 		expect(screen.getByRole('heading', { name: /create an account/i })).toBeInTheDocument();
 		expect(screen.getByRole('link', { name: /log in/i })).toHaveAttribute('href', '/login');
 	});
 
 	it('should allow a visitor to sign up and navigate to dashboard page', async () => {
+		setup();
 		vi.spyOn(supabase.auth, 'signUp').mockResolvedValueOnce(authResponse);
 		const user = userEvent.setup();
 

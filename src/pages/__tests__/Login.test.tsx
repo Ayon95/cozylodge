@@ -9,7 +9,7 @@ import Login from '../Login';
 import { authResponse } from '@/test/fixtures/authentication';
 import { Toaster } from 'react-hot-toast';
 
-beforeEach(() => {
+function setup() {
 	renderWithQueryClient(
 		<>
 			<MemoryRouter initialEntries={['/login']}>
@@ -21,7 +21,7 @@ beforeEach(() => {
 			<Toaster />
 		</>
 	);
-});
+}
 
 afterEach(() => {
 	vi.restoreAllMocks();
@@ -29,11 +29,13 @@ afterEach(() => {
 
 describe('Login', () => {
 	it('should have a page title and link to Signup page', () => {
+		setup();
 		expect(screen.getByRole('heading', { name: /log in to your account/i })).toBeInTheDocument();
 		expect(screen.getByRole('link', { name: /sign up/i })).toHaveAttribute('href', '/signup');
 	});
 
 	it('should allow a user to login and navigate to dashboard page', async () => {
+		setup();
 		vi.spyOn(supabase.auth, 'signInWithPassword').mockResolvedValueOnce(authResponse);
 		const user = userEvent.setup();
 

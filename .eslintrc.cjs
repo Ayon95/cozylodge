@@ -12,4 +12,12 @@ module.exports = {
 	rules: {
 		'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
 	},
+	overrides: [
+		// enable Jest DOM and testing library plugins for test files only
+		{
+			files: ['**/__tests__/**/*.[jt]s?(x)', '**/?(*.)+(spec|test).[jt]s?(x)'],
+			plugins: ['jest-dom', 'testing-library'],
+			extends: ['plugin:jest-dom/recommended', 'plugin:testing-library/react'],
+		},
+	],
 };
