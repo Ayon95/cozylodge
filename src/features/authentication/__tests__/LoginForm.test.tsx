@@ -8,20 +8,22 @@ import { MIN_PASSWORD_LENGTH } from '@/utils/constants';
 
 const submitButtonRegex = /login/i;
 
-beforeEach(() => {
+function setup() {
 	renderWithQueryClient(
 		<BrowserRouter>
 			<LoginForm />
 		</BrowserRouter>
 	);
-});
+}
 
 describe('LoginForm', () => {
 	it('should render a form element', () => {
+		setup();
 		expect(screen.getByRole('form', { name: /login/i })).toBeInTheDocument();
 	});
 
 	it('should have all the necessary fields and a submit button', () => {
+		setup();
 		const emailInput = screen.getByLabelText(/email address/i);
 		const passwordInput = screen.getByLabelText(/password/i);
 		const loginButton = screen.getByRole('button', { name: submitButtonRegex });
@@ -32,6 +34,7 @@ describe('LoginForm', () => {
 	});
 
 	it('should show error messages if required input values are not provided', async () => {
+		setup();
 		const user = userEvent.setup();
 
 		await user.click(screen.getByRole('button', { name: submitButtonRegex }));
@@ -44,6 +47,7 @@ describe('LoginForm', () => {
 	});
 
 	it('should show error message if invalid email is provided', async () => {
+		setup();
 		const user = userEvent.setup();
 
 		await user.type(screen.getByLabelText(/email address/i), 'test@');
@@ -55,6 +59,7 @@ describe('LoginForm', () => {
 	});
 
 	it('should show error message if password has fewer than minimum characters', async () => {
+		setup();
 		const user = userEvent.setup();
 		const password = '*'.repeat(MIN_PASSWORD_LENGTH - 1);
 

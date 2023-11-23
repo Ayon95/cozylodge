@@ -8,20 +8,22 @@ import CreateUserForm from '../SignupForm';
 
 const submitButtonRegex = /sign up/i;
 
-beforeEach(() => {
+function setup() {
 	renderWithQueryClient(
 		<BrowserRouter>
 			<CreateUserForm />
 		</BrowserRouter>
 	);
-});
+}
 
 describe('CreateUserForm', () => {
 	it('should render a form element', () => {
-		expect(screen.getByRole('form', { name: /create an account/i }));
+		setup();
+		expect(screen.getByRole('form', { name: /create an account/i })).toBeInTheDocument();
 	});
 
 	it('should have all the necessary fields and a submit button', () => {
+		setup();
 		const fullNameInput = screen.getByLabelText(/full name/i);
 		const emailInput = screen.getByLabelText(/email/i);
 		const passwordInput = screen.getByLabelText(/^password$/i);
@@ -36,6 +38,7 @@ describe('CreateUserForm', () => {
 	});
 
 	it('should show error messages if required input values are not provided', async () => {
+		setup();
 		const user = userEvent.setup();
 
 		user.click(screen.getByRole('button', { name: submitButtonRegex }));
@@ -50,6 +53,7 @@ describe('CreateUserForm', () => {
 	});
 
 	it('should show error message if full name has fewer than minimum characters', async () => {
+		setup();
 		const user = userEvent.setup();
 		const fullName = '*'.repeat(MIN_FULL_NAME_LENGTH - 1);
 
@@ -64,6 +68,7 @@ describe('CreateUserForm', () => {
 	});
 
 	it('should show error message if invalid email is provided', async () => {
+		setup();
 		const user = userEvent.setup();
 
 		await user.type(screen.getByLabelText(/email address/i), 'test@');
@@ -75,6 +80,7 @@ describe('CreateUserForm', () => {
 	});
 
 	it('should show error message if password has fewer than minimum characters', async () => {
+		setup();
 		const user = userEvent.setup();
 		const password = '*'.repeat(MIN_PASSWORD_LENGTH - 1);
 
@@ -89,6 +95,7 @@ describe('CreateUserForm', () => {
 	});
 
 	it('should show error message if passwords do not match', async () => {
+		setup();
 		const user = userEvent.setup();
 		const password = 'test123';
 		const confirmPassword = 'test123456';

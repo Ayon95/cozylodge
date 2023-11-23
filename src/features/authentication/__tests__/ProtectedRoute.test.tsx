@@ -9,7 +9,7 @@ import Login from '@/pages/Login';
 import Dashboard from '@/pages/Dashboard';
 import AuthLayout from '@/ui/layout/AuthLayout';
 
-beforeEach(() => {
+function setup() {
 	renderWithQueryClient(
 		<MemoryRouter initialEntries={['/dashboard']}>
 			<Routes>
@@ -33,7 +33,7 @@ beforeEach(() => {
 			</Routes>
 		</MemoryRouter>
 	);
-});
+}
 
 afterEach(() => {
 	vi.restoreAllMocks();
@@ -41,6 +41,7 @@ afterEach(() => {
 
 describe('ProtectedRoute', () => {
 	it('should redirect user to login page if user session does not exist', async () => {
+		setup();
 		vi.spyOn(supabase.auth, 'getSession').mockResolvedValueOnce(nonExistentSession);
 
 		const loginForm = await screen.findByRole('form');
@@ -49,6 +50,7 @@ describe('ProtectedRoute', () => {
 	});
 
 	it('should allow an authenticated user to access a protected route', async () => {
+		setup();
 		vi.spyOn(supabase.auth, 'getSession').mockResolvedValueOnce(userSession);
 
 		const dashboardTitle = await screen.findByRole('heading', { name: /dashboard/i });
