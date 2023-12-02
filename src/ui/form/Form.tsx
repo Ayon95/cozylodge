@@ -8,7 +8,7 @@ const Form = styled.form<FormProps>`
 	${props =>
 		props.type !== 'modal' &&
 		css`
-			padding: 2.4rem;
+			padding: 2rem;
 
 			/* Box */
 			background-color: var(--color-grey-0);
@@ -24,7 +24,10 @@ const Form = styled.form<FormProps>`
 		`}
     
   overflow: hidden;
-	font-size: 1.4rem;
+
+	& > *:not(:last-child) {
+		margin-bottom: 2rem;
+	}
 `;
 
 export default Form;

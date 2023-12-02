@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 interface FormControlProps {
-	labelInfo?: {
+	labelInfo: {
 		label: string;
 		inputId: string;
 	};
@@ -22,10 +22,6 @@ function FormControl({ labelInfo, error, children }: FormControlProps) {
 const Container = styled.div`
 	display: grid;
 	gap: 0.8rem;
-
-	&:not(:last-child) {
-		margin-bottom: 2rem;
-	}
 `;
 
 const Label = styled.label`
@@ -34,6 +30,7 @@ const Label = styled.label`
 
 const Error = styled.p`
 	font-size: 1.3rem;
+	font-weight: 500;
 	color: var(--color-red-600);
 `;
 
