@@ -14,6 +14,22 @@ import { cabins } from '@/test/fixtures/cabins';
 
 const deleteButtonRegex = /delete/i;
 
+function setupWithLogin() {
+	// Setting logged in user
+	vi.spyOn(supabase.auth, 'getSession').mockResolvedValue(userSession);
+
+	renderWithQueryClient(
+		<>
+			<Cabins />
+			<Toaster />
+		</>
+	);
+}
+
+afterEach(() => {
+	vi.restoreAllMocks();
+});
+
 describe('Cabins', () => {
 	it('should not show any cabins if there is no logged in user', async () => {
 		renderWithQueryClient(<Cabins />);
@@ -24,15 +40,7 @@ describe('Cabins', () => {
 	});
 
 	it('should remove the deleted cabin and show a deletion success message', async () => {
-		// Setting logged in user
-		vi.spyOn(supabase.auth, 'getSession').mockResolvedValueOnce(userSession);
-
-		renderWithQueryClient(
-			<>
-				<Cabins />
-				<Toaster />
-			</>
-		);
+		setupWithLogin();
 
 		const user = userEvent.setup();
 		const cabinRows = await screen.findAllByRole('row');
@@ -58,14 +66,7 @@ describe('Cabins', () => {
 			})
 		);
 
-		vi.spyOn(supabase.auth, 'getSession').mockResolvedValueOnce(userSession);
-
-		renderWithQueryClient(
-			<>
-				<Cabins />
-				<Toaster />
-			</>
-		);
+		setupWithLogin();
 
 		const user = userEvent.setup();
 		const cabinRows = await screen.findAllByRole('row');
@@ -78,5 +79,29 @@ describe('Cabins', () => {
 		const toast = await screen.findByText(/cabin could not be deleted/i);
 
 		expect(toast).toBeInTheDocument();
+	});
+
+	it('should show created cabin and a success message when a cabin is created', async () => {
+		setupWithLogin();
+
+		const user = userEvent.setup();
+		const imageFile = new File(['test'], 'cabin_image.png', { type: 'image/png' });
+		const createCabinForm = await screen.findByRole('form', { name: /create a cabin/i });
+
+		await user.type(within(createCabinForm).getByLabelText(/name/i), 'Test name');
+		await user.type(within(createCabinForm).getByLabelText(/description/i), 'Test description');
+		await user.type(within(createCabinForm).getByLabelText(/max capacity/i), '6');
+		await user.type(within(createCabinForm).getByLabelText(/price/i), '600');
+		await user.type(within(createCabinForm).getByLabelText(/discount/i), '20');
+		await user.upload(within(createCabinForm).getByLabelText(/image/i), imageFile);
+		await user.click(within(createCabinForm).getByRole('button', { name: /create cabin/i }));
+
+		const successMessage = await screen.findByText(/cabin created successfully!/i);
+		const cabinNameCell = await screen.findByRole('cell', { name: 'Test name' });
+
+		expect(successMessage).toBeInTheDocument();
+		expect(cabinNameCell).toBeInTheDocument();
+
+		db.cabin.delete({ where: { name: { equals: 'Test name' } } });
 	});
 });

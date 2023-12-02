@@ -44,6 +44,9 @@ export default createGlobalStyle`
   --color-red-700: #b91c1c;
   --color-red-800: #991b1b;
 
+  --fontSize-base: 1.6rem;
+  --fontSize-sm: calc(var(--fontSize-base) - 0.2rem);
+
   --backdrop-color: rgba(255, 255, 255, 0.1);
 
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
@@ -84,7 +87,7 @@ body {
   min-height: 100vh;
   min-height: 100svh;
   line-height: 1.5;
-  font-size: 1.6rem;
+  font-size: var(--fontSize-base);
 }
 
 input,
@@ -117,7 +120,7 @@ select:focus {
   outline-offset: -1px;
 }
 
-input,
+input:not(input[type="file"]),
 textarea {
   padding: 0.45em 0.9em;
 	border: 1px solid var(--color-grey-300);
@@ -212,8 +215,26 @@ FOR DARK MODE
   margin-top: 1rem;
 }
 
+.mt-3 {
+  margin-top: 3rem;
+}
+
+.text-sm {
+  font-size: var(--fontSize-sm);
+}
+
 .text-center {
   text-align: center;
 }
 
+.full-width {
+  width: 100%;
+}
+
+.multi-col-input-container {
+  display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
+	gap: 1rem;
+	align-items: start;
+}
 `;

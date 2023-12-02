@@ -110,11 +110,9 @@ function SignupForm() {
 					aria-invalid={formErrors.confirmPassword ? 'true' : 'false'}
 				/>
 			</FormControl>
-			<FormControl>
-				<Button size="large" disabled={signupMutation.isLoading}>
-					{signupMutation.isLoading ? <SpinnerMini /> : 'Sign Up'}
-				</Button>
-			</FormControl>
+			<Button size="large" className="full-width" disabled={signupMutation.isLoading}>
+				{signupMutation.isLoading ? <SpinnerMini /> : 'Sign Up'}
+			</Button>
 		</Form>
 	);
 }

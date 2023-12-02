@@ -74,11 +74,9 @@ function LoginForm() {
 					aria-invalid={formErrors.password ? 'true' : 'false'}
 				/>
 			</FormControl>
-			<FormControl>
-				<Button size="large" disabled={loginMutation.isLoading}>
-					{loginMutation.isLoading ? <SpinnerMini /> : 'Login'}
-				</Button>
-			</FormControl>
+			<Button size="large" className="full-width" disabled={loginMutation.isLoading}>
+				{loginMutation.isLoading ? <SpinnerMini /> : 'Login'}
+			</Button>
 		</Form>
 	);
 }
