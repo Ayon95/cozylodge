@@ -64,6 +64,12 @@ insert into
             auth.users
     );
 
+-- create storage buckets for cabin images and user avatars
+insert into storage.buckets(id, name, owner, public, avif_autodetection)
+values
+('cabin-images', 'cabin-images', null, true, false),
+('avatars', 'avatars', null, true, false);
+
 do $$
 <<first_block>>
 declare

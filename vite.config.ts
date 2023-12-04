@@ -24,4 +24,9 @@ export default defineConfig({
 			'@/test': path.resolve(__dirname, 'src/test'),
 		},
 	},
+	build: {
+		rollupOptions: {
+			external: ['src/assets/seedImages'],
+		},
+	},
 });
