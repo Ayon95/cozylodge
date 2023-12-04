@@ -21,18 +21,8 @@
 		"noFallthroughCasesInSwitch": true,
 
 		"types": ["node", "vitest/globals", "@testing-library/jest-dom"],
-		"baseUrl": "src",
 		"paths": {
-			"@/features/*": ["features/*"],
-			"@/hooks/*": ["hooks/*"],
-			"@/pages/*": ["pages/*"],
-			"@/ui/*": ["ui/*"],
-			"@/utils/*": ["utils/*"],
-			"@/data/*": ["data/*"],
-			"@/services/*": ["services/*"],
-			"@/styles/*": ["styles/*"],
-			"@/types/*": ["types/*"],
-			"@/test/*": ["test/*"]
+			"@/*": ["./src/*"]
 		}
 	},
 	"include": ["src"],
