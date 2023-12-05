@@ -8,6 +8,7 @@ export function useUser() {
 		queryKey: [USER_QUERY_KEY],
 		queryFn: getCurrentUser,
 		staleTime: ACCESS_TOKEN_EXPIRATION_TIME,
+		cacheTime: ACCESS_TOKEN_EXPIRATION_TIME + 5 * 60 * 1000,
 	});
 	return result;
 }
