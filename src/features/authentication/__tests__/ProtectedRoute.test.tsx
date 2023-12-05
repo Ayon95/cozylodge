@@ -42,8 +42,8 @@ afterEach(() => {
 
 describe('ProtectedRoute', () => {
 	it('should redirect user to login page if user session does not exist', async () => {
-		setup();
 		vi.spyOn(supabase.auth, 'getSession').mockResolvedValueOnce(nonExistentSession);
+		setup();
 
 		const loginForm = await screen.findByRole('form');
 
