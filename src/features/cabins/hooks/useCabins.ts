@@ -6,5 +6,7 @@ export function useCabins(userId: string | null | undefined) {
 	return useQuery({
 		queryKey: [CABINS_QUERY_KEY, userId],
 		queryFn: () => getCabins(userId),
+		staleTime: Infinity,
+		cacheTime: Infinity,
 	});
 }

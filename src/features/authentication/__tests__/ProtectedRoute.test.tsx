@@ -1,6 +1,7 @@
 import { renderWithQueryClient } from '@/test/utils';
 import { screen } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
+
 import ProtectedRoute from '../ProtectedRoute';
 import AppLayout from '@/ui/layout/AppLayout';
 import supabase from '@/services/supabase';
@@ -41,8 +42,8 @@ afterEach(() => {
 
 describe('ProtectedRoute', () => {
 	it('should redirect user to login page if user session does not exist', async () => {
-		setup();
 		vi.spyOn(supabase.auth, 'getSession').mockResolvedValueOnce(nonExistentSession);
+		setup();
 
 		const loginForm = await screen.findByRole('form');
 
@@ -50,8 +51,8 @@ describe('ProtectedRoute', () => {
 	});
 
 	it('should allow an authenticated user to access a protected route', async () => {
-		setup();
 		vi.spyOn(supabase.auth, 'getSession').mockResolvedValueOnce(userSession);
+		setup();
 
 		const dashboardTitle = await screen.findByRole('heading', { name: /dashboard/i });
 
