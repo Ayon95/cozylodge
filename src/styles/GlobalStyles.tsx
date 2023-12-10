@@ -47,7 +47,7 @@ export default createGlobalStyle`
   --fontSize-base: 1.6rem;
   --fontSize-sm: calc(var(--fontSize-base) - 0.2rem);
 
-  --backdrop-color: rgba(255, 255, 255, 0.1);
+  --backdrop-color: rgba(0, 0, 0, 0.3);
 
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
   --shadow-md: 0px 0.6rem 2.4rem rgba(0, 0, 0, 0.06);
@@ -112,12 +112,17 @@ input:disabled {
   color: var(--color-grey-500);
 }
 
-input:focus,
-button:focus,
-textarea:focus,
-select:focus {
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+:focus-visible {
   outline: 2px solid var(--color-brand-600);
   outline-offset: -1px;
+}
+
+button:focus-visible {
+  outline-offset: 3px;
 }
 
 input:not(input[type="file"]),

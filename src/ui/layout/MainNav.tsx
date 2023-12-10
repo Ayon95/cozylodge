@@ -51,6 +51,7 @@ const NavList = styled.ul`
 `;
 
 const StyledNavLink = styled(NavLink)`
+	--transition-duration: 0.2s;
 	&:link,
 	&:visited {
 		display: flex;
@@ -61,7 +62,10 @@ const StyledNavLink = styled(NavLink)`
 		font-size: 1.6rem;
 		font-weight: 600;
 		padding: 1.2rem 2.4rem;
-		transition: all 0.3s;
+		border-radius: var(--border-radius-sm);
+		transition:
+			color var(--transition-duration),
+			background-color var(--transition-duration);
 	}
 
 	/* This works because react-router places the active class on the active NavLink */
@@ -71,13 +75,12 @@ const StyledNavLink = styled(NavLink)`
 	&.active:visited {
 		color: var(--color-brand-600);
 		background-color: var(--color-brand-100);
-		border-radius: var(--border-radius-sm);
 	}
 
 	& svg {
 		width: 2.4rem;
 		height: 2.4rem;
-		transition: all 0.3s;
+		transition: color var(--transition-duration);
 	}
 
 	&:hover svg,

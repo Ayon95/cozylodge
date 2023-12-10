@@ -2,8 +2,8 @@ import styled, { css } from 'styled-components';
 import { Link } from 'react-router-dom';
 
 interface ButtonProps {
-	size?: 'small' | 'medium' | 'large';
-	variant?: 'primary' | 'secondary' | 'danger';
+	$size?: 'small' | 'medium' | 'large';
+	$variant?: 'primary' | 'secondary' | 'danger';
 }
 
 const sizes = {
@@ -59,8 +59,8 @@ const commonButtonStyles = css<ButtonProps>`
 	border-radius: var(--border-radius-sm);
 	box-shadow: var(--shadow-sm);
 
-	${props => (!props.size ? sizes['medium'] : sizes[props.size])}
-	${props => (!props.variant ? variants['primary'] : variants[props.variant])}
+	${props => (!props.$size ? sizes['medium'] : sizes[props.$size])}
+	${props => (!props.$variant ? variants['primary'] : variants[props.$variant])}
 `;
 
 export const Button = styled.button<ButtonProps>`
