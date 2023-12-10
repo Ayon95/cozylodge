@@ -5,7 +5,7 @@ import { HiXMark } from 'react-icons/hi2';
 import { Button } from '@/ui/button/Button';
 import { createUniqueId, getFocusableElements } from '@/utils/helpers';
 import Heading from './Heading';
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import useFocusTrap from '@/hooks/useFocusTrap';
 
 interface ModalProps {
@@ -28,8 +28,16 @@ export default function Modal({ title, closeModal, children }: ModalProps) {
 		moveFocusInsideModal();
 	}, [modalRef]);
 
+	function closeModalOnOverlayClick(e: React.MouseEvent) {
+		const targetElement = e.target as HTMLElement;
+
+		if (targetElement.closest(`#${modalId}`)) return;
+
+		closeModal();
+	}
+
 	return ReactDOM.createPortal(
-		<Overlay>
+		<Overlay onClick={closeModalOnOverlayClick}>
 			<Container
 				id={modalId}
 				role="dialog"
