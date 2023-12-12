@@ -1,20 +1,21 @@
+import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import styled from 'styled-components';
 import { HiXMark } from 'react-icons/hi2';
 
 import { Button } from '@/ui/button/Button';
 import { createUniqueId, getFocusableElements } from '@/utils/helpers';
-import Heading from './Heading';
-import React, { useEffect } from 'react';
+import Heading from '../Heading';
 import useFocusTrap from '@/hooks/useFocusTrap';
 
 interface ModalProps {
 	title: string;
-	closeModal: () => void;
+	onCloseModal: () => void;
+	extraFooterButtons?: React.ReactNode;
 	children: React.ReactNode;
 }
 
-export default function Modal({ title, closeModal, children }: ModalProps) {
+export default function Modal({ title, onCloseModal, extraFooterButtons, children }: ModalProps) {
 	const modalId = createUniqueId();
 	const modalRef = useFocusTrap<HTMLDivElement>();
 
@@ -30,10 +31,7 @@ export default function Modal({ title, closeModal, children }: ModalProps) {
 
 	function closeModalOnOverlayClick(e: React.MouseEvent) {
 		const targetElement = e.target as HTMLElement;
-
-		if (targetElement.closest(`#${modalId}`)) return;
-
-		closeModal();
+		if (targetElement === e.currentTarget) onCloseModal();
 	}
 
 	return ReactDOM.createPortal(
@@ -49,18 +47,19 @@ export default function Modal({ title, closeModal, children }: ModalProps) {
 					<Heading as="h2" id={`${modalId}_modalTitle`}>
 						{title}
 					</Heading>
-					<CloseIconButton aria-labelledby={`${modalId}_closeModalButton`} onClick={closeModal}>
+					<CloseIconButton aria-labelledby={`${modalId}_closeModalButton`} onClick={onCloseModal}>
 						<span className="sr-only" id={`${modalId}_closeModalButton`}>
 							Close modal
 						</span>
 						<HiXMark />
 					</CloseIconButton>
 				</Header>
-				<Body>{children}</Body>
+				<div>{children}</div>
 				<Footer>
-					<Button $variant="danger" onClick={closeModal}>
+					<Button $variant="secondary" onClick={onCloseModal}>
 						Close
 					</Button>
+					{extraFooterButtons}
 				</Footer>
 			</Container>
 		</Overlay>,
@@ -103,10 +102,10 @@ const Header = styled.div`
 	flex-wrap: wrap;
 `;
 
-const Body = styled.div``;
-
 const Footer = styled.div`
-	text-align: right;
+	display: flex;
+	justify-content: flex-end;
+	gap: 1rem;
 `;
 
 const CloseIconButton = styled.button`
