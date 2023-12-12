@@ -1,40 +1,75 @@
+import { useState } from 'react';
 import styled from 'styled-components';
 
 import TableRow from './CabinRow';
 import { Tables } from '@/types/database';
+import useModal from '@/hooks/useModal';
+import ConfirmDeleteModal from '@/ui/Modal/ConfirmDeleteModal';
+import { useDeleteCabin } from './hooks/useDeleteCabin';
+import { SelectedCabinInfo } from './types';
 
 interface CabinTableProps {
 	cabins: Tables<'cabin'>[];
 }
 
 function CabinTable({ cabins }: CabinTableProps) {
+	const [selectedCabin, setSelectedCabin] = useState<null | SelectedCabinInfo>(null);
+	const { shouldShowModal, closeModal, openModal: openConfirmDeleteModal } = useModal();
+
+	const deleteCabinMutation = useDeleteCabin();
+
+	function deleteSelectedCabin() {
+		if (selectedCabin) {
+			deleteCabinMutation.mutate(selectedCabin.id);
+			closeModal();
+		}
+	}
+
+	function showConfirmDeleteModalForSelectedCabin(cabin: SelectedCabinInfo) {
+		setSelectedCabin(cabin);
+		openConfirmDeleteModal();
+	}
 	return (
-		<TableContainer role="region" tabIndex={0} aria-labelledby="cabinTableCaption">
-			<Table role="table">
-				<caption className="sr-only" id="cabinTableCaption" role="caption">
-					Cabins available at CozyLodge
-				</caption>
-				<thead role="rowgroup">
-					<tr role="row">
-						<th role="columnheader">
-							<span className="sr-only">Image</span>
-						</th>
-						<th role="columnheader">Cabin</th>
-						<th role="columnheader">Capacity</th>
-						<th role="columnheader">Price</th>
-						<th role="columnheader">Discount</th>
-						<th role="columnheader">
-							<span className="sr-only">Actions</span>
-						</th>
-					</tr>
-				</thead>
-				<tbody role="rowgroup">
-					{cabins.map(cabin => (
-						<TableRow cabin={cabin} key={cabin.id} />
-					))}
-				</tbody>
-			</Table>
-		</TableContainer>
+		<>
+			<TableContainer role="region" tabIndex={0} aria-labelledby="cabinTableCaption">
+				<Table role="table">
+					<caption className="sr-only" id="cabinTableCaption" role="caption">
+						Cabins available at CozyLodge
+					</caption>
+					<thead role="rowgroup">
+						<tr role="row">
+							<th role="columnheader">
+								<span className="sr-only">Image</span>
+							</th>
+							<th role="columnheader">Cabin</th>
+							<th role="columnheader">Capacity</th>
+							<th role="columnheader">Price</th>
+							<th role="columnheader">Discount</th>
+							<th role="columnheader">
+								<span className="sr-only">Actions</span>
+							</th>
+						</tr>
+					</thead>
+					<tbody role="rowgroup">
+						{cabins.map(cabin => (
+							<TableRow
+								cabin={cabin}
+								key={cabin.id}
+								onClickDelete={showConfirmDeleteModalForSelectedCabin}
+							/>
+						))}
+					</tbody>
+				</Table>
+			</TableContainer>
+			{selectedCabin && shouldShowModal && (
+				<ConfirmDeleteModal
+					resourceName={`cabin ${selectedCabin.name}`}
+					onConfirmDelete={deleteSelectedCabin}
+					onCloseModal={closeModal}
+					isDeleting={deleteCabinMutation.isLoading}
+				/>
+			)}
+		</>
 	);
 }
 

@@ -13,6 +13,8 @@ import { db } from '@/test/mocks/db';
 import { cabins } from '@/test/fixtures/cabins';
 
 const deleteButtonRegex = /delete/i;
+const confirmDeleteButtonRegex = /delete/i;
+const confirmDeleteModalTitleRegex = /are you sure you want to delete?/i;
 
 function setupWithLogin() {
 	// Setting logged in user
@@ -39,7 +41,7 @@ describe('Cabins', () => {
 		expect(noCabinsTextElement).toBeInTheDocument();
 	});
 
-	it('should remove the deleted cabin and show a deletion success message', async () => {
+	it('should delete a cabin after confirmation and show a deletion success message', async () => {
 		setupWithLogin();
 
 		const user = userEvent.setup();
@@ -50,9 +52,19 @@ describe('Cabins', () => {
 
 		await user.click(firstCabinDeleteButton);
 
+		const confirmDeleteModal = screen.getByRole('dialog', {
+			name: confirmDeleteModalTitleRegex,
+		});
+		const confirmDeleteButton = within(confirmDeleteModal).getByRole('button', {
+			name: confirmDeleteButtonRegex,
+		});
+
+		await user.click(confirmDeleteButton);
+
 		const toast = await screen.findByText(/cabin deleted successfully!/i);
 
 		expect(toast).toBeInTheDocument();
+		expect(confirmDeleteModal).not.toBeInTheDocument();
 		expect(cabinRows[1]).not.toBeInTheDocument();
 
 		// Reset cabin data in the database by adding back the first cabin
@@ -75,6 +87,15 @@ describe('Cabins', () => {
 		});
 
 		await user.click(firstCabinDeleteButton);
+
+		const confirmDeleteModal = screen.getByRole('dialog', {
+			name: confirmDeleteModalTitleRegex,
+		});
+		const confirmDeleteButton = within(confirmDeleteModal).getByRole('button', {
+			name: confirmDeleteButtonRegex,
+		});
+
+		await user.click(confirmDeleteButton);
 
 		const toast = await screen.findByText(/cabin could not be deleted/i);
 

@@ -2,17 +2,17 @@ import styled from 'styled-components';
 
 import { formatPrice } from '@/utils/helpers';
 import { Tables } from '@/types/database';
-import { useDeleteCabin } from './hooks/useDeleteCabin';
 import ButtonIconText from '@/ui/button/ButtonIconText';
 import { HiOutlineTrash } from 'react-icons/hi2';
+import { SelectedCabinInfo } from './types';
 
 interface TableRowProps {
 	cabin: Tables<'cabin'>;
+	onClickDelete: (cabin: SelectedCabinInfo) => void;
 }
 
-function CabinRow({ cabin }: TableRowProps) {
+function CabinRow({ cabin, onClickDelete }: TableRowProps) {
 	const { id, name, description, max_capacity, regular_price, discount, image_url } = cabin;
-	const deleteCabinMutation = useDeleteCabin();
 	return (
 		<StyledTableRow role="row">
 			<td role="cell">
@@ -31,12 +31,7 @@ function CabinRow({ cabin }: TableRowProps) {
 				{discount ? formatPrice(discount) : '—'}
 			</Discount>
 			<td role="cell">
-				<ButtonIconText
-					type="button"
-					$variant="danger"
-					disabled={deleteCabinMutation.isLoading}
-					onClick={() => deleteCabinMutation.mutate(id)}
-				>
+				<ButtonIconText type="button" $variant="danger" onClick={() => onClickDelete({ id, name })}>
 					<HiOutlineTrash aria-hidden="true" />
 					<span>Delete</span>
 				</ButtonIconText>

@@ -1,4 +1,4 @@
-import Modal from '@/ui/Modal';
+import Modal from '@/ui/Modal/Modal';
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { vi } from 'vitest';
@@ -11,7 +11,7 @@ afterEach(() => {
 
 function setup() {
 	render(
-		<Modal title="This is a modal" closeModal={mockCloseModal}>
+		<Modal title="This is a modal" onCloseModal={mockCloseModal}>
 			<p>This is some content</p>
 			<button>Some Button</button>
 		</Modal>
@@ -30,6 +30,22 @@ describe('Modal', () => {
 		expect(titleElement).toBeInTheDocument();
 		expect(bodyContentElement).toBeInTheDocument();
 		expect(closeButtons).toHaveLength(2);
+	});
+
+	it('should have extra buttons in the footer if provided', () => {
+		render(
+			<Modal
+				title="This is a modal"
+				onCloseModal={mockCloseModal}
+				extraFooterButtons={<button>Extra Button</button>}
+			>
+				<p>This is some content</p>
+			</Modal>
+		);
+
+		const extraButton = screen.getByRole('button', { name: /extra button/i });
+
+		expect(extraButton).toBeInTheDocument();
 	});
 
 	it('should call the function to close the modal when a close button is clicked', async () => {

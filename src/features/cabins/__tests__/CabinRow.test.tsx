@@ -1,20 +1,31 @@
 import { screen, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import CabinRow from '../CabinRow';
 import { Tables } from '@/types/database';
 import { cabins } from '@/test/fixtures/cabins';
 import { renderWithQueryClient } from '@/test/utils';
 
+const mockOnClickDelete = vi.fn();
+
+function setup(cabin: Tables<'cabin'>) {
+	renderWithQueryClient(
+		<table>
+			<tbody>
+				<CabinRow cabin={cabin} onClickDelete={mockOnClickDelete} />
+			</tbody>
+		</table>
+	);
+}
+
+afterEach(() => {
+	vi.restoreAllMocks();
+});
+
 describe('CabinRow', () => {
 	it('should have image cell with correct src and alt attributes', () => {
 		const cabin = cabins[0];
-		renderWithQueryClient(
-			<table>
-				<tbody>
-					<CabinRow cabin={cabin} />
-				</tbody>
-			</table>
-		);
+		setup(cabins[0]);
 
 		const imageCell = screen.getAllByRole('cell')[0];
 		const image = within(imageCell).getByRole('img');
@@ -24,19 +35,23 @@ describe('CabinRow', () => {
 	});
 
 	it('should have an actions cell with a delete button', () => {
-		const cabin = cabins[0];
-
-		renderWithQueryClient(
-			<table>
-				<tbody>
-					<CabinRow cabin={cabin} />
-				</tbody>
-			</table>
-		);
+		setup(cabins[0]);
 
 		const actionsCell = screen.getAllByRole('cell')[5];
 
 		expect(within(actionsCell).getByRole('button', { name: /delete/i })).toBeInTheDocument();
+	});
+
+	it('should call onClickDelete with cabin info when delete button is clicked', async () => {
+		const cabin = cabins[0];
+		setup(cabin);
+		const user = userEvent.setup();
+		const actionsCell = screen.getAllByRole('cell')[5];
+		const deleteButton = within(actionsCell).getByRole('button', { name: /delete/i });
+
+		await user.click(deleteButton);
+
+		expect(mockOnClickDelete).toHaveBeenCalledWith({ id: cabin.id, name: cabin.name });
 	});
 
 	it('should show dash in discount cell if cabin has no discount', () => {
@@ -52,13 +67,7 @@ describe('CabinRow', () => {
 			user_id: 'test id',
 		};
 
-		renderWithQueryClient(
-			<table>
-				<tbody>
-					<CabinRow cabin={cabinWithoutDiscount} />
-				</tbody>
-			</table>
-		);
+		setup(cabinWithoutDiscount);
 
 		const cells = screen.getAllByRole('cell');
 
