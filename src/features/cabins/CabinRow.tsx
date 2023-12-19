@@ -3,20 +3,20 @@ import styled from 'styled-components';
 import { formatPrice } from '@/utils/helpers';
 import { Tables } from '@/types/database';
 import ButtonIconText from '@/ui/button/ButtonIconText';
-import { HiOutlineTrash } from 'react-icons/hi2';
-import { SelectedCabinInfo } from './types';
+import { HiOutlinePencilSquare, HiOutlineTrash } from 'react-icons/hi2';
 
-interface TableRowProps {
+interface CabinRowProps {
 	cabin: Tables<'cabin'>;
-	onClickDelete: (cabin: SelectedCabinInfo) => void;
+	onClickUpdate: (cabin: Tables<'cabin'>) => void;
+	onClickDelete: (cabin: Tables<'cabin'>) => void;
 }
 
-function CabinRow({ cabin, onClickDelete }: TableRowProps) {
-	const { id, name, description, max_capacity, regular_price, discount, image_url } = cabin;
+function CabinRow({ cabin, onClickUpdate, onClickDelete }: CabinRowProps) {
+	const { name, description, max_capacity, regular_price, discount, image_url } = cabin;
 	return (
 		<StyledTableRow role="row">
 			<td role="cell">
-				<Img src={image_url} alt={`${name}, ${description}`} />
+				<Img src={`${image_url}?q=${Date.now()}`} alt={`${name}, ${description}`} />
 			</td>
 			<Cabin role="cell" data-cell="cabin">
 				{name}
@@ -31,10 +31,21 @@ function CabinRow({ cabin, onClickDelete }: TableRowProps) {
 				{discount ? formatPrice(discount) : '—'}
 			</Discount>
 			<td role="cell">
-				<ButtonIconText type="button" $variant="danger" onClick={() => onClickDelete({ id, name })}>
-					<HiOutlineTrash aria-hidden="true" />
-					<span>Delete</span>
-				</ButtonIconText>
+				<ActionButtonsContainer>
+					<ButtonIconText type="button" aria-haspopup="dialog" onClick={() => onClickUpdate(cabin)}>
+						<HiOutlinePencilSquare aria-hidden="true" />
+						<span>Update</span>
+					</ButtonIconText>
+					<ButtonIconText
+						type="button"
+						aria-haspopup="dialog"
+						$variant="danger"
+						onClick={() => onClickDelete(cabin)}
+					>
+						<HiOutlineTrash aria-hidden="true" />
+						<span>Delete</span>
+					</ButtonIconText>
+				</ActionButtonsContainer>
 			</td>
 		</StyledTableRow>
 	);
@@ -65,6 +76,11 @@ const Img = styled.img`
 	@media only screen and (min-width: 62.5em) {
 		max-width: 9.2rem;
 	}
+`;
+
+const ActionButtonsContainer = styled.div`
+	display: flex;
+	gap: 12px;
 `;
 
 const Cabin = styled(AlternateFontCell)`

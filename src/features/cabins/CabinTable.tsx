@@ -1,31 +1,58 @@
 import { useState } from 'react';
 import styled from 'styled-components';
 
-import TableRow from './CabinRow';
+import CabinRow from './CabinRow';
 import { Tables } from '@/types/database';
 import useModal from '@/hooks/useModal';
 import ConfirmDeleteModal from '@/ui/Modal/ConfirmDeleteModal';
 import { useDeleteCabin } from './hooks/useDeleteCabin';
-import { SelectedCabinInfo } from './types';
+import Modal from '@/ui/Modal/Modal';
+import UpdateCabinForm from './UpdateCabinForm';
 
 interface CabinTableProps {
 	cabins: Tables<'cabin'>[];
 }
 
 function CabinTable({ cabins }: CabinTableProps) {
-	const [selectedCabin, setSelectedCabin] = useState<null | SelectedCabinInfo>(null);
-	const { shouldShowModal, closeModal, openModal: openConfirmDeleteModal } = useModal();
+	const [selectedCabin, setSelectedCabin] = useState<null | Tables<'cabin'>>(null);
+
+	const {
+		shouldShowModal: shouldShowUpdateModal,
+		closeModal: closeUpdateModal,
+		openModal: openUpdateModal,
+	} = useModal();
+
+	const {
+		shouldShowModal: shouldShowConfirmDeleteModal,
+		closeModal: closeConfirmDeleteModal,
+		openModal: openConfirmDeleteModal,
+	} = useModal();
 
 	const deleteCabinMutation = useDeleteCabin();
+
+	function closeUpdateModalForSelectedCabin() {
+		setSelectedCabin(null);
+		closeUpdateModal();
+	}
+
+	function closeConfirmDeleteModalForSelectedCabin() {
+		setSelectedCabin(null);
+		closeConfirmDeleteModal();
+	}
 
 	function deleteSelectedCabin() {
 		if (selectedCabin) {
 			deleteCabinMutation.mutate(selectedCabin.id);
-			closeModal();
+			closeConfirmDeleteModalForSelectedCabin();
 		}
 	}
 
-	function showConfirmDeleteModalForSelectedCabin(cabin: SelectedCabinInfo) {
+	function showUpdateModalForSelectedCabin(cabin: Tables<'cabin'>) {
+		setSelectedCabin(cabin);
+		openUpdateModal();
+	}
+
+	function showConfirmDeleteModalForSelectedCabin(cabin: Tables<'cabin'>) {
 		setSelectedCabin(cabin);
 		openConfirmDeleteModal();
 	}
@@ -52,20 +79,26 @@ function CabinTable({ cabins }: CabinTableProps) {
 					</thead>
 					<tbody role="rowgroup">
 						{cabins.map(cabin => (
-							<TableRow
+							<CabinRow
 								cabin={cabin}
 								key={cabin.id}
+								onClickUpdate={showUpdateModalForSelectedCabin}
 								onClickDelete={showConfirmDeleteModalForSelectedCabin}
 							/>
 						))}
 					</tbody>
 				</Table>
 			</TableContainer>
-			{selectedCabin && shouldShowModal && (
+			{selectedCabin && shouldShowUpdateModal && (
+				<Modal title="Update cabin" onCloseModal={closeUpdateModalForSelectedCabin}>
+					<UpdateCabinForm cabin={selectedCabin} onUpdate={closeUpdateModal} />
+				</Modal>
+			)}
+			{selectedCabin && shouldShowConfirmDeleteModal && (
 				<ConfirmDeleteModal
 					resourceName={`cabin ${selectedCabin.name}`}
 					onConfirmDelete={deleteSelectedCabin}
-					onCloseModal={closeModal}
+					onCloseModal={closeConfirmDeleteModalForSelectedCabin}
 					isDeleting={deleteCabinMutation.isLoading}
 				/>
 			)}
@@ -117,7 +150,8 @@ const Table = styled.table`
 			grid-template-columns: 10ch auto;
 		}
 
-		td img {
+		td img,
+		td:last-child > * {
 			grid-column: 1/-1;
 		}
 

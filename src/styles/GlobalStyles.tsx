@@ -44,6 +44,15 @@ export default createGlobalStyle`
   --color-red-700: #b91c1c;
   --color-red-800: #991b1b;
 
+  --color-btn-primary: var(--color-brand-500);
+  --color-btn-primary-dark: var(--color-brand-600);
+  --color-btn-secondary: var(--color-grey-100);
+  --color-btn-secondary-dark: var(--color-grey-200);
+  --color-btn-danger: var(--color-red-600);
+  --color-btn-danger-dark: var(--color-red-700);
+
+  --font-color-btn-secondary: var(--color-grey-600);
+
   --fontSize-base: 1.6rem;
   --fontSize-sm: calc(var(--fontSize-base) - 0.2rem);
 

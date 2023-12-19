@@ -7,12 +7,17 @@ import { cabins } from '@/test/fixtures/cabins';
 import { renderWithQueryClient } from '@/test/utils';
 
 const mockOnClickDelete = vi.fn();
+const mockOnClickUpdate = vi.fn();
 
 function setup(cabin: Tables<'cabin'>) {
 	renderWithQueryClient(
 		<table>
 			<tbody>
-				<CabinRow cabin={cabin} onClickDelete={mockOnClickDelete} />
+				<CabinRow
+					cabin={cabin}
+					onClickDelete={mockOnClickDelete}
+					onClickUpdate={mockOnClickUpdate}
+				/>
 			</tbody>
 		</table>
 	);
@@ -30,7 +35,7 @@ describe('CabinRow', () => {
 		const imageCell = screen.getAllByRole('cell')[0];
 		const image = within(imageCell).getByRole('img');
 
-		expect(image).toHaveAttribute('src', cabin.image_url);
+		expect(image).toHaveAttribute('src', expect.stringContaining(cabin.image_url));
 		expect(image).toHaveAttribute('alt', `${cabin.name}, ${cabin.description}`);
 	});
 
@@ -42,7 +47,7 @@ describe('CabinRow', () => {
 		expect(within(actionsCell).getByRole('button', { name: /delete/i })).toBeInTheDocument();
 	});
 
-	it('should call onClickDelete with cabin info when delete button is clicked', async () => {
+	it('should call onClickDelete with cabin data when delete button is clicked', async () => {
 		const cabin = cabins[0];
 		setup(cabin);
 		const user = userEvent.setup();
@@ -51,7 +56,19 @@ describe('CabinRow', () => {
 
 		await user.click(deleteButton);
 
-		expect(mockOnClickDelete).toHaveBeenCalledWith({ id: cabin.id, name: cabin.name });
+		expect(mockOnClickDelete).toHaveBeenCalledWith(cabin);
+	});
+
+	it('should call onClickUpdate with cabin data when update button is clicked', async () => {
+		const cabin = cabins[0];
+		setup(cabin);
+		const user = userEvent.setup();
+		const actionsCell = screen.getAllByRole('cell')[5];
+		const updateButton = within(actionsCell).getByRole('button', { name: /update/i });
+
+		await user.click(updateButton);
+
+		expect(mockOnClickUpdate).toHaveBeenCalledWith(cabin);
 	});
 
 	it('should show dash in discount cell if cabin has no discount', () => {

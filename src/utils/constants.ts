@@ -4,6 +4,8 @@ export const USER_QUERY_KEY = 'user';
 // In milliseconds
 export const ACCESS_TOKEN_EXPIRATION_TIME = 1 * 60 * 60 * 1000;
 
+export const SUPABASE_STORAGE_BASE_URL = `${import.meta.env.VITE_SUPABASE_URL}/storage/v1/object`;
+
 export const CABINS_QUERY_KEY = 'cabins';
 export const CABINS_BASE_URL = `${import.meta.env.VITE_SUPABASE_URL}/rest/v1/cabin`;
 export const MIN_CABIN_NAME_LENGTH = 3;
