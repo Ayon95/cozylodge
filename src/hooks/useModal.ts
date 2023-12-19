@@ -1,5 +1,5 @@
 import { isFocusable } from '@/utils/helpers';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 
 export default function useModal() {
 	const [shouldShowModal, setShouldShowModal] = useState(false);
@@ -16,25 +16,12 @@ export default function useModal() {
 		setShouldShowModal(true);
 	}
 
-	const closeModal = useCallback(() => {
+	function closeModal() {
 		if (modalTriggerElementRef.current) {
 			restoreFocus(modalTriggerElementRef.current);
 		}
 		setShouldShowModal(false);
-	}, []);
-
-	useEffect(() => {
-		function handleEscapeKeypress(e: KeyboardEvent) {
-			if (e.key !== 'Escape') return;
-			closeModal();
-		}
-
-		document.addEventListener('keydown', handleEscapeKeypress);
-
-		return () => {
-			document.removeEventListener('keydown', handleEscapeKeypress);
-		};
-	}, [closeModal]);
+	}
 
 	return { shouldShowModal, openModal, closeModal };
 }

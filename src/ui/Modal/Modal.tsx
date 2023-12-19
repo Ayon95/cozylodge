@@ -29,6 +29,23 @@ export default function Modal({ title, onCloseModal, extraFooterButtons, childre
 		moveFocusInsideModal();
 	}, [modalRef]);
 
+	useEffect(() => {
+		if (!modalRef.current) return;
+
+		const modal = modalRef.current;
+
+		function handleEscapeKeypress(e: KeyboardEvent) {
+			if (e.key !== 'Escape') return;
+			onCloseModal();
+		}
+
+		modal.addEventListener('keydown', handleEscapeKeypress);
+
+		return () => {
+			modal.removeEventListener('keydown', handleEscapeKeypress);
+		};
+	}, [modalRef, onCloseModal]);
+
 	function closeModalOnOverlayClick(e: React.MouseEvent) {
 		const targetElement = e.target as HTMLElement;
 		if (targetElement === e.currentTarget) onCloseModal();

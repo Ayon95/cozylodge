@@ -1,3 +1,5 @@
+import { FieldValues } from 'react-hook-form';
+
 export function formatPrice(value: number) {
 	return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(value);
 }
@@ -14,4 +16,24 @@ export function getFocusableElements(container: HTMLElement) {
 
 export function isFocusable(element: Element | null): element is HTMLElement {
 	return element instanceof HTMLElement;
+}
+
+export function getModifiedFormFieldValues<T extends FieldValues>(
+	dirtyFields: Partial<Record<keyof T, boolean>>,
+	allValues: T
+) {
+	return Object.keys(dirtyFields).reduce((values, currentField) => {
+		return { ...values, [currentField]: allValues[currentField] };
+	}, {} as Partial<T>);
+}
+
+export function getImageNameFromUrl(url: string) {
+	const imageUrlParts = url.split('/');
+	return imageUrlParts[imageUrlParts.length - 1];
+}
+
+export function getIdFromQueryString(url: URL) {
+	const queryParams = new URL(url).searchParams;
+	// ID will be in this format -> ?id=eq.1
+	return Number(queryParams.get('id')?.split('.')[1]);
 }

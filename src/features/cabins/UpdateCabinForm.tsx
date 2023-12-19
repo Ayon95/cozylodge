@@ -6,11 +6,15 @@ import { Button } from '@/ui/button/Button';
 import Form from '@/ui/form/Form';
 import FormControl from '@/ui/form/FormControl';
 import { MAX_CABIN_DISCOUNT, MAX_CABIN_IMAGE_SIZE, MIN_CABIN_NAME_LENGTH } from '@/utils/constants';
-import { useCreateCabin } from './hooks/useCreateCabin';
+import { useUpdateCabin } from './hooks/useUpdateCabin';
 import SpinnerMini from '@/ui/spinner/SpinnerMini';
+import { Tables } from '@/types/database';
+import { CabinUpdateDTO } from '@/types/cabins';
+import { getModifiedFormFieldValues } from '@/utils/helpers';
 
-interface CreateCabinFormProps {
-	userId: string;
+interface UpdateCabinFormProps {
+	cabin: Tables<'cabin'>;
+	onUpdate?: () => void;
 }
 
 const formSchema = z.object({
@@ -33,117 +37,128 @@ const formSchema = z.object({
 		.lte(MAX_CABIN_DISCOUNT, { message: `Discount cannot be greater than ${MAX_CABIN_DISCOUNT}%` }),
 	image: z
 		.custom<FileList>()
-		.refine(files => files.length > 0, { message: 'Cabin image is required' })
-		.refine(files => files?.[0]?.type.startsWith('image'), { message: 'File must be an image' })
-		.refine(files => files?.[0]?.size <= MAX_CABIN_IMAGE_SIZE, {
+		.refine(files => (files.length === 0 ? true : files[0].type.startsWith('image')), {
+			message: 'File must be an image',
+		})
+		.refine(files => (files.length === 0 ? true : files[0].size <= MAX_CABIN_IMAGE_SIZE), {
 			message: `Image file size cannot exceed ${MAX_CABIN_IMAGE_SIZE / (1024 * 1024)}MB`,
 		}),
 });
 
 type FormData = z.infer<typeof formSchema>;
 
-function CreateCabinForm({ userId }: CreateCabinFormProps) {
+function UpdateCabinForm({ cabin, onUpdate }: UpdateCabinFormProps) {
 	const form = useForm<FormData>({
 		resolver: zodResolver(formSchema),
+
 		defaultValues: {
-			max_capacity: 1,
-			discount: 0,
+			name: cabin.name,
+			description: cabin.description,
+			max_capacity: cabin.max_capacity,
+			regular_price: cabin.regular_price,
+			discount: cabin.discount || 0,
 		},
 	});
 	const formErrors = form.formState.errors;
+	const dirtyFields = form.formState.dirtyFields;
 
-	const createCabinMutation = useCreateCabin();
+	const updateCabinMutation = useUpdateCabin();
 
 	function handleSubmit(formData: FormData) {
-		createCabinMutation.mutate({ ...formData, user_id: userId }, { onSuccess: () => form.reset() });
+		const updatedData: CabinUpdateDTO = getModifiedFormFieldValues(dirtyFields, formData);
+
+		updateCabinMutation.mutate({ cabin, updatedData }, { onSettled: () => onUpdate?.() });
 	}
 	return (
 		<Form
 			onSubmit={form.handleSubmit(handleSubmit)}
-			aria-labelledby="createCabinFormLabel"
+			aria-labelledby="updateCabinFormLabel"
 			noValidate
 		>
-			<span className="sr-only" id="createCabinFormLabel">
-				Create a cabin
+			<span className="sr-only" id="updateCabinFormLabel">
+				Update cabin
 			</span>
-			<FormControl labelInfo={{ label: 'Name', inputId: 'name' }} error={formErrors.name?.message}>
+			<FormControl
+				labelInfo={{ label: 'Name', inputId: 'nameUpdate' }}
+				error={formErrors.name?.message}
+			>
 				<input
 					{...form.register('name')}
 					type="text"
-					id="name"
+					id="nameUpdate"
 					aria-invalid={formErrors.name ? 'true' : 'false'}
-					disabled={createCabinMutation.isLoading}
+					disabled={updateCabinMutation.isLoading}
 				/>
 			</FormControl>
 			<FormControl
-				labelInfo={{ label: 'Description', inputId: 'description' }}
+				labelInfo={{ label: 'Description', inputId: 'descriptionUpdate' }}
 				error={formErrors.description?.message}
 			>
 				<textarea
 					{...form.register('description')}
-					id="description"
+					id="descriptionUpdate"
 					aria-invalid={formErrors.description ? 'true' : 'false'}
-					disabled={createCabinMutation.isLoading}
+					disabled={updateCabinMutation.isLoading}
 				/>
 			</FormControl>
 			<FormControl
-				labelInfo={{ label: 'Max capacity', inputId: 'max_capacity' }}
+				labelInfo={{ label: 'Max capacity', inputId: 'maxCapacityUpdate' }}
 				error={formErrors.max_capacity?.message}
 			>
 				<input
 					{...form.register('max_capacity')}
 					type="number"
-					id="max_capacity"
+					id="maxCapacityUpdate"
 					aria-invalid={formErrors.max_capacity ? 'true' : 'false'}
-					disabled={createCabinMutation.isLoading}
+					disabled={updateCabinMutation.isLoading}
 				/>
 			</FormControl>
 			<div className="multi-col-input-container">
 				<FormControl
-					labelInfo={{ label: 'Price', inputId: 'regular_price' }}
+					labelInfo={{ label: 'Price', inputId: 'priceUpdate' }}
 					error={formErrors.regular_price?.message}
 				>
 					<input
 						{...form.register('regular_price')}
 						type="number"
-						id="regular_price"
+						id="priceUpdate"
 						aria-invalid={formErrors.regular_price ? 'true' : 'false'}
-						disabled={createCabinMutation.isLoading}
+						disabled={updateCabinMutation.isLoading}
 					/>
 				</FormControl>
 				<FormControl
-					labelInfo={{ label: 'Discount (%)', inputId: 'discount' }}
+					labelInfo={{ label: 'Discount (%)', inputId: 'discountUpdate' }}
 					error={formErrors.discount?.message}
 				>
 					<input
 						{...form.register('discount')}
 						type="number"
-						id="discount"
+						id="discountUpdate"
 						aria-invalid={formErrors.discount ? 'true' : 'false'}
-						disabled={createCabinMutation.isLoading}
+						disabled={updateCabinMutation.isLoading}
 					/>
 				</FormControl>
 			</div>
 			<FormControl
-				labelInfo={{ label: 'Image', inputId: 'image' }}
+				labelInfo={{ label: 'Image', inputId: 'imageUpdate' }}
 				error={formErrors.image?.message}
 			>
 				<input
 					{...form.register('image')}
 					type="file"
 					accept="image/*"
-					id="image"
+					id="imageUpdate"
 					aria-invalid={formErrors.image ? 'true' : 'false'}
-					disabled={createCabinMutation.isLoading}
+					disabled={updateCabinMutation.isLoading}
 				/>
 				<p className="text-sm">Max file size: {MAX_CABIN_IMAGE_SIZE / (1024 * 1024)}MB</p>
 			</FormControl>
-			<Button $size="large" disabled={createCabinMutation.isLoading}>
-				{createCabinMutation.isLoading ? <SpinnerMini /> : 'Create cabin'}
+			<Button $size="large" disabled={updateCabinMutation.isLoading}>
+				{updateCabinMutation.isLoading ? <SpinnerMini /> : 'Update cabin'}
 			</Button>
-			{createCabinMutation.isError && <p>{createCabinMutation.error.message}</p>}
+			{updateCabinMutation.isError && <p>{updateCabinMutation.error.message}</p>}
 		</Form>
 	);
 }
 
-export default CreateCabinForm;
+export default UpdateCabinForm;

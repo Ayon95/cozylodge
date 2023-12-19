@@ -28,28 +28,28 @@ const sizes = {
 
 const variants = {
 	primary: css`
-		color: var(--color-brand-50);
-		background-color: var(--color-brand-500);
+		color: var(--color-grey-0);
+		background-color: var(--color-btn-primary);
 
 		&:hover {
-			background-color: var(--color-brand-600);
+			background-color: var(--color-btn-primary-dark);
 		}
 	`,
 	secondary: css`
-		color: var(--color-grey-600);
-		background-color: var(--color-grey-100);
-		border: 1px solid var(--color-grey-200);
+		color: var(--font-color-btn-secondary);
+		background-color: var(--color-btn-secondary);
+		border: 1px solid var(--color-btn-secondary-dark);
 
 		&:hover {
-			background-color: var(--color-grey-200);
+			background-color: var(--color-btn-secondary-dark);
 		}
 	`,
 	danger: css`
-		color: var(--color-red-100);
-		background-color: var(--color-red-600);
+		color: var(--color-grey-0);
+		background-color: var(--color-btn-danger);
 
 		&:hover {
-			background-color: var(--color-red-700);
+			background-color: var(--color-btn-danger-dark);
 		}
 	`,
 };
