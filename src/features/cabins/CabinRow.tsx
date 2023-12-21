@@ -4,6 +4,7 @@ import { formatPrice } from '@/utils/helpers';
 import { Tables } from '@/types/database';
 import ButtonIconText from '@/ui/button/ButtonIconText';
 import { HiOutlinePencilSquare, HiOutlineTrash } from 'react-icons/hi2';
+import Table from '@/ui/Table';
 
 interface CabinRowProps {
 	cabin: Tables<'cabin'>;
@@ -14,23 +15,15 @@ interface CabinRowProps {
 function CabinRow({ cabin, onClickUpdate, onClickDelete }: CabinRowProps) {
 	const { name, description, max_capacity, regular_price, discount, image_url } = cabin;
 	return (
-		<StyledTableRow role="row">
-			<td role="cell">
+		<Table.Row>
+			<Table.Cell>
 				<Img src={`${image_url}?q=${Date.now()}`} alt={`${name}, ${description}`} />
-			</td>
-			<Cabin role="cell" data-cell="cabin">
-				{name}
-			</Cabin>
-			<td role="cell" data-cell="capacity">
-				{max_capacity}
-			</td>
-			<AlternateFontCell role="cell" data-cell="price">
-				{formatPrice(regular_price)}
-			</AlternateFontCell>
-			<Discount role="cell" data-cell="discount">
-				{discount ? formatPrice(discount) : '—'}
-			</Discount>
-			<td role="cell">
+			</Table.Cell>
+			<CabinCell label="cabin">{name}</CabinCell>
+			<Table.Cell label="capacity">{max_capacity}</Table.Cell>
+			<AlternateFontCell label="price">{formatPrice(regular_price)}</AlternateFontCell>
+			<DiscountCell label="discount">{discount ? formatPrice(discount) : '—'}</DiscountCell>
+			<Table.Cell>
 				<ActionButtonsContainer>
 					<ButtonIconText type="button" aria-haspopup="dialog" onClick={() => onClickUpdate(cabin)}>
 						<HiOutlinePencilSquare aria-hidden="true" />
@@ -46,25 +39,15 @@ function CabinRow({ cabin, onClickUpdate, onClickDelete }: CabinRowProps) {
 						<span>Delete</span>
 					</ButtonIconText>
 				</ActionButtonsContainer>
-			</td>
-		</StyledTableRow>
+			</Table.Cell>
+		</Table.Row>
 	);
 }
 
 export default CabinRow;
 
-const AlternateFontCell = styled.td`
+const AlternateFontCell = styled(Table.Cell)`
 	font-family: 'Sono', monospace;
-`;
-
-const StyledTableRow = styled.tr`
-	&:nth-child(2n) {
-		background-color: var(--color-grey-200);
-	}
-
-	&:not(:last-child) {
-		border-bottom: 1px solid var(--color-grey-100);
-	}
 `;
 
 const Img = styled.img`
@@ -83,10 +66,10 @@ const ActionButtonsContainer = styled.div`
 	gap: 12px;
 `;
 
-const Cabin = styled(AlternateFontCell)`
+const CabinCell = styled(AlternateFontCell)`
 	color: var(--color-grey-600);
 `;
 
-const Discount = styled(AlternateFontCell)`
+const DiscountCell = styled(AlternateFontCell)`
 	color: var(--color-green-700);
 `;
