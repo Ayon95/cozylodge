@@ -3,10 +3,19 @@ import { renderWithQueryClient } from '@/test/utils';
 
 import CabinTable from '../CabinTable';
 import { cabins } from '@/test/fixtures/cabins';
+import { MemoryRouter } from 'react-router-dom';
+
+function setup() {
+	renderWithQueryClient(
+		<MemoryRouter>
+			<CabinTable cabins={cabins} />
+		</MemoryRouter>
+	);
+}
 
 describe('CabinTable', () => {
 	it('should have all column headers in the correct order', async () => {
-		renderWithQueryClient(<CabinTable cabins={cabins} />);
+		setup();
 
 		const columnHeaders = await screen.findAllByRole('columnheader');
 
@@ -19,7 +28,7 @@ describe('CabinTable', () => {
 	});
 
 	it('should have rows with cabin details in the correct order', async () => {
-		renderWithQueryClient(<CabinTable cabins={cabins} />);
+		setup();
 
 		const cabinRows = await screen.findAllByRole('row');
 		// The first row contains column headers

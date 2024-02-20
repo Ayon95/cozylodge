@@ -13,6 +13,7 @@ export const cabins: Tables<'cabin'>[] = [
 		image_url: 'test url 1',
 		user_id: user.id,
 	},
+
 	{
 		id: 2,
 		created_at: '2023-09-16T01:38:13.379438+00:00',
@@ -22,6 +23,18 @@ export const cabins: Tables<'cabin'>[] = [
 		discount: 75,
 		description: 'Comfortable cabin for a small family',
 		image_url: 'test url 2',
+		user_id: user.id,
+	},
+
+	{
+		id: 3,
+		created_at: '2023-09-16T01:38:13.379438+00:00',
+		name: 'Test 003',
+		max_capacity: 6,
+		regular_price: 700,
+		discount: 0,
+		description: 'Comfortable cabin for a large family',
+		image_url: 'test url 3',
 		user_id: user.id,
 	},
 ];

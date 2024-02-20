@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 
 import CabinRow from './CabinRow';
 import { Tables } from '@/types/database';
@@ -8,13 +9,49 @@ import { useDeleteCabin } from './hooks/useDeleteCabin';
 import Modal from '@/ui/Modal/Modal';
 import UpdateCabinForm from './UpdateCabinForm';
 import Table from '@/ui/Table';
+import { CabinFields } from '@/types/cabins';
+import { createObjectCompareFunction } from '@/utils/helpers';
+import { SortDirections } from '@/types/sort';
+
+type Cabin = Tables<'cabin'>;
 
 interface CabinTableProps {
-	cabins: Tables<'cabin'>[];
+	cabins: Cabin[];
 }
 
 function CabinTable({ cabins }: CabinTableProps) {
-	const [selectedCabin, setSelectedCabin] = useState<null | Tables<'cabin'>>(null);
+	const [selectedCabin, setSelectedCabin] = useState<null | Cabin>(null);
+	const [searchParams] = useSearchParams();
+
+	const discountFilterValue = searchParams.get('discount');
+	const sortValue = searchParams.get('sort');
+
+	const filteredCabins = discountFilterValue ? getFilteredCabins() : cabins;
+	const sortedCabins = getSortedCabins(filteredCabins);
+
+	function getFilteredCabins() {
+		return cabins.filter(cabin => {
+			if (discountFilterValue === 'true') {
+				return cabin.discount !== null && cabin.discount > 0;
+			}
+			if (discountFilterValue === 'false') {
+				return cabin.discount === null || cabin.discount === 0;
+			}
+		});
+	}
+
+	function getSortedCabins(cabins: Cabin[]) {
+		if (sortValue) {
+			const [sortBy, sortDirection] = sortValue.split('-');
+			const compareFunction = createObjectCompareFunction<Cabin>(
+				sortBy as CabinFields,
+				sortDirection as SortDirections
+			);
+
+			return [...cabins].sort(compareFunction);
+		}
+		return cabins;
+	}
 
 	const {
 		shouldShowModal: shouldShowUpdateModal,
@@ -47,12 +84,12 @@ function CabinTable({ cabins }: CabinTableProps) {
 		}
 	}
 
-	function showUpdateModalForSelectedCabin(cabin: Tables<'cabin'>) {
+	function showUpdateModalForSelectedCabin(cabin: Cabin) {
 		setSelectedCabin(cabin);
 		openUpdateModal();
 	}
 
-	function showConfirmDeleteModalForSelectedCabin(cabin: Tables<'cabin'>) {
+	function showConfirmDeleteModalForSelectedCabin(cabin: Cabin) {
 		setSelectedCabin(cabin);
 		openConfirmDeleteModal();
 	}
@@ -74,7 +111,7 @@ function CabinTable({ cabins }: CabinTableProps) {
 					</Table.Row>
 				</Table.Head>
 				<Table.Body>
-					{cabins.map(cabin => (
+					{sortedCabins.map(cabin => (
 						<CabinRow
 							cabin={cabin}
 							key={cabin.id}

@@ -5,6 +5,7 @@ import Spinner from '@/ui/spinner/Spinner';
 import { useCabins } from '@/features/cabins/hooks/useCabins';
 import CreateCabinForm from '@/features/cabins/CreateCabinForm';
 import { useUser } from '@/features/authentication/hooks/useUser';
+import CabinFilterAndSortControls from '@/features/cabins/CabinFilterAndSortControls';
 
 function Cabins() {
 	const { data: user } = useUser();
@@ -14,7 +15,7 @@ function Cabins() {
 		<>
 			<FlexRow>
 				<Heading as="h1">Cabins</Heading>
-				<span>Filter / Sort</span>
+				<CabinFilterAndSortControls />
 			</FlexRow>
 			{isLoading ? (
 				<Spinner />
