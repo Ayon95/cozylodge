@@ -3,6 +3,7 @@ import { CABINS_BASE_URL, CABIN_IMAGES_BUCKET, SUPABASE_STORAGE_BASE_URL } from 
 import { DefaultBodyType, PathParams, rest } from 'msw';
 import { db } from '../db';
 import { getIdFromQueryString } from '@/utils/helpers';
+import { cabins } from '@/test/fixtures/cabins';
 
 export const cabinHandlers = [
 	rest.get<DefaultBodyType, PathParams<string>, Tables<'cabin'>[]>(
@@ -14,7 +15,7 @@ export const cabinHandlers = [
 	),
 	rest.post(CABINS_BASE_URL, async (req, res, ctx) => {
 		const data = await req.json();
-		db.cabin.create({ ...data, id: 3 });
+		db.cabin.create({ ...data, id: cabins.length + 1 });
 		return res(ctx.status(201));
 	}),
 	rest.patch(CABINS_BASE_URL, async (req, res, ctx) => {
