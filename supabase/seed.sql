@@ -81,5 +81,19 @@ begin
   values
   ('001', 2, 250, 50, 'A small luxury cabin in the woods', 'http://localhost:54321/storage/v1/object/public/cabin-images/cabin-001.jpg', user_id),
   ('002', 4, 500, 75, 'Comfortable cabin for a small family', 'http://localhost:54321/storage/v1/object/public/cabin-images/cabin-002.jpg', user_id);
+-- create guests
+    insert into
+    public.guest (full_name, email, nationality, user_id)
+    values
+    ('John Doe', 'john12@example.com', 'Canada', user_id),
+    ('Mary Smith', 'mary34@example.com', 'Canada', user_id);
+-- create bookings
+    insert into
+    public.booking (start_date, end_date, num_nights, num_guests, cabin_price, extra_price, total_price, status, cabin_id, guest_id, user_id)
+    values
+    ('2024-02-20 18:42:34', '2024-02-22 18:42:39', 2, 2, 250, 50, 300, 'checked-out', 1, 1, user_id),
+    ('2024-02-20 18:42:34', '2024-02-24 18:42:39', 4, 4, 500, 100, 600, 'checked-out', 2, 2, user_id);
 end first_block $$;
+
+
 

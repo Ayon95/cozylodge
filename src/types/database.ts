@@ -37,7 +37,7 @@ export interface Database {
 					cabin_price: number;
 					created_at: string;
 					end_date: string;
-					extras_price: number;
+					extra_price: number;
 					guest_id: number;
 					has_breakfast: boolean;
 					id: number;
@@ -55,7 +55,7 @@ export interface Database {
 					cabin_price: number;
 					created_at?: string;
 					end_date: string;
-					extras_price: number;
+					extra_price: number;
 					guest_id: number;
 					has_breakfast: boolean;
 					id?: number;
@@ -73,7 +73,7 @@ export interface Database {
 					cabin_price?: number;
 					created_at?: string;
 					end_date?: string;
-					extras_price?: number;
+					extra_price?: number;
 					guest_id?: number;
 					has_breakfast?: boolean;
 					id?: number;

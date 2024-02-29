@@ -241,6 +241,10 @@ FOR DARK MODE
   text-align: center;
 }
 
+.fw-semi-bold {
+  font-weight: 600;
+}
+
 .full-width {
   width: 100%;
 }

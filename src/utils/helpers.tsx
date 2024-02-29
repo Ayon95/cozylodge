@@ -5,6 +5,21 @@ export function formatPrice(value: number) {
 	return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(value);
 }
 
+export function formatDate(
+	dateString: string,
+	options: Intl.DateTimeFormatOptions = { dateStyle: 'medium' }
+) {
+	const dateObj = new Date(dateString);
+	const utcDate = new Date(
+		dateObj.getUTCFullYear(),
+		dateObj.getUTCMonth(),
+		dateObj.getUTCDate(),
+		dateObj.getUTCHours(),
+		dateObj.getUTCMinutes()
+	);
+	return new Intl.DateTimeFormat('en-US', options).format(utcDate);
+}
+
 export function createUniqueId() {
 	return Date.now().toString(36) + Math.random().toString(36).slice(2);
 }
