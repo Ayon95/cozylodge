@@ -89,10 +89,10 @@ begin
     ('Mary Smith', 'mary34@example.com', 'Canada', user_id);
 -- create bookings
     insert into
-    public.booking (start_date, end_date, num_nights, num_guests, cabin_price, extra_price, total_price, status, cabin_id, guest_id, user_id)
+    public.booking (start_date, end_date, num_nights, num_guests, cabin_price, extra_price, total_price, status, cabin_id, guest_id, user_id, has_breakfast, is_paid)
     values
-    ('2024-02-20 18:42:34', '2024-02-22 18:42:39', 2, 2, 250, 50, 300, 'checked-out', 1, 1, user_id),
-    ('2024-02-20 18:42:34', '2024-02-24 18:42:39', 4, 4, 500, 100, 600, 'checked-out', 2, 2, user_id);
+    ('2024-02-20 18:42:34', '2024-02-22 18:42:39', 2, 2, 250, 50, 300, 'checked-out', 1, 1, user_id, true, true),
+    ('2024-02-20 18:42:34', '2024-02-24 18:42:39', 4, 4, 500, 100, 600, 'checked-out', 2, 2, user_id, true, true);
 end first_block $$;
 
 
