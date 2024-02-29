@@ -13,3 +13,6 @@ export const MAX_CABIN_DISCOUNT = 100;
 // In bytes
 export const MAX_CABIN_IMAGE_SIZE = 5 * 1024 * 1024;
 export const CABIN_IMAGES_BUCKET = 'cabin-images';
+
+export const BOOKINGS_QUERY_KEY = 'bookings';
+export const BOOKINGS_BASE_URL = `${import.meta.env.VITE_SUPABASE_URL}/rest/v1/booking`;
