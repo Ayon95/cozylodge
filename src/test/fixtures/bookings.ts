@@ -26,12 +26,32 @@ export const bookings: Booking[] = [
 	{
 		id: 2,
 		created_at: '2024-02-20T23:44:26.426083+00:00',
-		start_date: '2024-02-20T18:42:34',
-		end_date: '2024-02-24T18:42:39',
+		start_date: '2024-02-21T18:42:34',
+		end_date: '2024-02-25T18:42:39',
 		num_nights: 4,
 		num_guests: cabins[1].max_capacity,
-		status: 'checked-out',
+		status: 'checked-in',
 		total_price: cabins[1].regular_price + 100,
+		cabin: {
+			id: cabins[1].id,
+			name: cabins[1].name,
+		},
+		guest: {
+			id: guests[1].id,
+			full_name: guests[1].full_name,
+			email: guests[1].email,
+		},
+	},
+
+	{
+		id: 3,
+		created_at: '2024-03-01T23:44:26.426083+00:00',
+		start_date: '2024-04-10T18:42:34',
+		end_date: '2024-04-15T18:42:39',
+		num_nights: 5,
+		num_guests: cabins[1].max_capacity,
+		status: 'unconfirmed',
+		total_price: cabins[1].regular_price + 150,
 		cabin: {
 			id: cabins[1].id,
 			name: cabins[1].name,

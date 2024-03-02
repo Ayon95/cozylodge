@@ -4,6 +4,7 @@ import { useUser } from '@/features/authentication/hooks/useUser';
 import { useBookings } from '@/features/bookings/hooks/useBookings';
 import Spinner from '@/ui/spinner/Spinner';
 import BookingTable from '@/features/bookings/BookingTable';
+import BookingFilterAndSortControls from '@/features/bookings/BookingFilterAndSortControls';
 
 function Bookings() {
 	const { data: user } = useUser();
@@ -13,6 +14,7 @@ function Bookings() {
 		<>
 			<FlexRow>
 				<Heading as="h1">Bookings</Heading>
+				<BookingFilterAndSortControls />
 			</FlexRow>
 			{isLoading ? (
 				<Spinner />
