@@ -1,12 +1,17 @@
 import { BookingFilter, BookingSort } from '@/types/bookings';
 import supabase from './supabase';
+import { PAGE_SIZE } from '@/utils/constants';
 
-export async function getBookings(
-	userId: string | null | undefined,
-	filter: BookingFilter | null,
-	sort: BookingSort | null
-) {
-	if (!userId) return [];
+type GetBookingsConfig = {
+	filter: BookingFilter | null;
+	sort: BookingSort | null;
+	pageNum: number | null;
+};
+
+export async function getBookings(userId: string | null | undefined, config: GetBookingsConfig) {
+	if (!userId) return { bookings: [], count: 0 };
+
+	const { filter, sort, pageNum } = config;
 
 	let query = supabase
 		.from('booking')
@@ -39,6 +44,22 @@ export async function getBookings(
 		query = query.order(sort.field, { ascending: sort.direction === 'asc' });
 	}
 
+	// Need to make an extra query to get the total count of bookings before pagination
+	// If a query is made with the count option, it returns a response object with a count property
+	// This causes problems when sending MSW mock responses
+	const { data: nonPaginatedBookings, error: nonPaginatedBookingsError } = await query;
+
+	if (nonPaginatedBookingsError) {
+		console.error(nonPaginatedBookingsError);
+		throw new Error('Bookings could not be loaded.');
+	}
+
+	if (pageNum) {
+		const from = (pageNum - 1) * PAGE_SIZE;
+		const to = from + PAGE_SIZE - 1;
+		query = query.range(from, to);
+	}
+
 	const { data: bookings, error } = await query;
 
 	if (error) {
@@ -46,5 +67,5 @@ export async function getBookings(
 		throw new Error('Bookings could not be loaded.');
 	}
 
-	return bookings;
+	return { bookings, count: nonPaginatedBookings ? nonPaginatedBookings.length : 0 };
 }

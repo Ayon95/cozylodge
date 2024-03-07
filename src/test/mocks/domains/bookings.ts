@@ -1,18 +1,21 @@
 import { rest } from 'msw';
 import { SortDirection } from '@mswjs/data/lib/query/queryTypes';
 
-import { BOOKINGS_BASE_URL } from '@/utils/constants';
+import { BOOKINGS_BASE_URL, PAGE_SIZE } from '@/utils/constants';
 import { db } from '../db';
 
 export const bookingHandlers = [
 	rest.get(BOOKINGS_BASE_URL, (req, res, ctx) => {
 		const url = new URL(req.url);
+
 		// the query param value will be like 'eq.unconfirmed', ?status=eq.unconfirmed
 		const statusFilterValue = url.searchParams.get('status')?.split('.')[1];
+
 		// the sort query param will be like order=total_price.desc
-		// When sending the request to msw server, the query string needs to be like ?sort=total_price-desc
-		// If no sort direction is specified, then 'desc' will be used
 		const sortValue = url.searchParams.get('order');
+
+		// Pagination query params will be like offset=0 and limit=5
+		const offsetValue = url.searchParams.get('offset');
 
 		if (statusFilterValue && sortValue) {
 			const [sortBy, sortDirection] = sortValue.split('.');
@@ -59,6 +62,14 @@ export const bookingHandlers = [
 				});
 				return res(ctx.json(bookings));
 			}
+		}
+
+		if (offsetValue) {
+			const bookings = db.booking.findMany({
+				skip: Number.parseFloat(offsetValue),
+				take: PAGE_SIZE,
+			});
+			return res(ctx.json(bookings));
 		}
 
 		const bookings = db.booking.getAll();
