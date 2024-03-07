@@ -16,3 +16,5 @@ export const CABIN_IMAGES_BUCKET = 'cabin-images';
 
 export const BOOKINGS_QUERY_KEY = 'bookings';
 export const BOOKINGS_BASE_URL = `${import.meta.env.VITE_SUPABASE_URL}/rest/v1/booking`;
+
+export const PAGE_SIZE = import.meta.env.MODE === 'test' ? 2 : 10;

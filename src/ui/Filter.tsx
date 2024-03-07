@@ -11,11 +11,16 @@ export default function Filter<Field extends string>({ options, field }: FilterP
 	const currentFilter = searchParams.get(field);
 
 	function setFilterSearchParam(filterValue: string) {
+		// Reset page query param if it exists
+		if (searchParams.get('page')) searchParams.set('page', '1');
+
 		searchParams.set(field, filterValue);
 		setSearchParams(searchParams);
 	}
 
 	function removeFilterSearchParam() {
+		if (searchParams.get('page')) searchParams.set('page', '1');
+
 		searchParams.delete(field);
 		setSearchParams(searchParams);
 	}
