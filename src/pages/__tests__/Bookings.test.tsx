@@ -207,19 +207,19 @@ describe('Bookings', () => {
 		expect(paginationTextElement).toBeInTheDocument();
 	});
 
-	it.only('pagination previous button should be disabled when on the first page', async () => {
+	it('pagination previous button should be disabled when on the first page', async () => {
 		setupWithLogin('?page=1');
 		const previousButton = await screen.findByRole('button', { name: /previous/i });
 		expect(previousButton).toBeDisabled();
 	});
 
-	it.only('pagination next button should be disabled when on the last page', async () => {
+	it('pagination next button should be disabled when on the last page', async () => {
 		setupWithLogin('?page=2');
 		const nextButton = await screen.findByRole('button', { name: /next/i });
 		expect(nextButton).toBeDisabled();
 	});
 
-	it.only('should show the contents of the next page when next button is clicked', async () => {
+	it('should show the contents of the next page when next button is clicked', async () => {
 		setupWithLogin('?page=1');
 		const user = userEvent.setup();
 		const nextButton = await screen.findByRole('button', { name: /next/i });
@@ -241,7 +241,7 @@ describe('Bookings', () => {
 		expect(bookingCells[1]).toHaveTextContent(`${guests[1].full_name}${guests[1].email}`);
 	});
 
-	it.only('should show the contents of the previous page when previous button is clicked', async () => {
+	it('should show the contents of the previous page when previous button is clicked', async () => {
 		setupWithLogin('?page=2');
 		const user = userEvent.setup();
 		const previousButton = await screen.findByRole('button', { name: /previous/i });
