@@ -1,18 +1,10 @@
 import { SortDirection } from '@mswjs/data/lib/query/queryTypes';
 import { Tables } from './database';
 
-export type Booking = Pick<
-	Tables<'booking'>,
-	| 'id'
-	| 'created_at'
-	| 'start_date'
-	| 'end_date'
-	| 'num_nights'
-	| 'num_guests'
-	| 'status'
-	| 'total_price'
-> & { cabin: Pick<Tables<'cabin'>, 'id' | 'name'> | null } & {
-	guest: Pick<Tables<'guest'>, 'id' | 'full_name' | 'email'> | null;
+export type Booking = Omit<Tables<'booking'>, 'cabin_id' | 'guest_id'> & {
+	cabin: Pick<Tables<'cabin'>, 'id' | 'name'> | null;
+} & {
+	guest: Tables<'guest'> | null;
 };
 
 export type BookingFields = keyof Booking;

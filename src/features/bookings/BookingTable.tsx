@@ -16,6 +16,9 @@ function BookingTable({ bookings }: BookingTableProps) {
 					<Table.HeaderCell>Duration</Table.HeaderCell>
 					<Table.HeaderCell>Status</Table.HeaderCell>
 					<Table.HeaderCell>Price</Table.HeaderCell>
+					<Table.HeaderCell>
+						<span className="sr-only">Actions</span>
+					</Table.HeaderCell>
 				</Table.Row>
 			</Table.Head>
 			<Table.Body>

@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 import { formatPrice } from '@/utils/helpers';
 import { Tables } from '@/types/database';
-import ButtonIconText from '@/ui/button/ButtonIconText';
+import { ButtonIconText } from '@/ui/button/ButtonIconText';
 import { HiOutlinePencilSquare, HiOutlineTrash } from 'react-icons/hi2';
 import Table from '@/ui/Table';
 
@@ -47,7 +47,7 @@ function CabinRow({ cabin, onClickUpdate, onClickDelete }: CabinRowProps) {
 export default CabinRow;
 
 const AlternateFontCell = styled(Table.Cell)`
-	font-family: 'Sono', monospace;
+	font-family: var(--fontFamily-numeric);
 `;
 
 const Img = styled.img`

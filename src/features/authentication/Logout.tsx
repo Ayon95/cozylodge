@@ -1,7 +1,7 @@
 import { HiOutlineArrowRightOnRectangle } from 'react-icons/hi2';
 import { useLogout } from './hooks/useLogout';
 import SpinnerMini from '@/ui/spinner/SpinnerMini';
-import ButtonIconText from '@/ui/button/ButtonIconText';
+import { ButtonIconText } from '@/ui/button/ButtonIconText';
 
 function Logout() {
 	const { mutate, isLoading } = useLogout();

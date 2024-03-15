@@ -13,12 +13,7 @@ export async function getBookings(userId: string | null | undefined, config: Get
 
 	const { filter, sort, pageNum } = config;
 
-	let query = supabase
-		.from('booking')
-		.select(
-			'id, created_at, start_date, end_date, num_nights, num_guests, status, total_price, cabin(name, id), guest(id, full_name, email)'
-		)
-		.eq('user_id', userId);
+	let query = supabase.from('booking').select('*, cabin(name, id), guest(*)').eq('user_id', userId);
 
 	if (filter) {
 		switch (filter.comparisonMethod) {
@@ -68,4 +63,22 @@ export async function getBookings(userId: string | null | undefined, config: Get
 	}
 
 	return { bookings, count: nonPaginatedBookings ? nonPaginatedBookings.length : 0 };
+}
+
+export async function getBooking(bookingId: string | undefined, userId: string | null | undefined) {
+	if (!bookingId || !userId) return null;
+
+	const { data: booking, error } = await supabase
+		.from('booking')
+		.select('*, cabin(*), guest(*)')
+		.eq('id', bookingId)
+		.eq('user_id', userId)
+		.single();
+
+	if (error) {
+		console.error(error);
+		throw new Error('Booking could not be found.');
+	}
+
+	return booking;
 }
