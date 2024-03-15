@@ -136,7 +136,8 @@ const StyledTable = styled.table`
 const ResponsiveCell = styled.td<{ $label?: string }>`
 	@media only screen and (max-width: 62.5em) {
 		display: grid;
-		grid-template-columns: 10ch auto;
+		grid-template-columns: 12ch auto;
+		column-gap: 1rem;
 
 		> * {
 			${props =>
@@ -151,6 +152,7 @@ const ResponsiveCell = styled.td<{ $label?: string }>`
 				props.$label &&
 				css`
 					content: attr(data-cell) ': ';
+					font-family: 'Raleway', sans-serif;
 					font-weight: bold;
 					text-transform: capitalize;
 				`}

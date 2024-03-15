@@ -1,3 +1,5 @@
+import { BookingStatus } from '@/types/bookings';
+
 export const MIN_PASSWORD_LENGTH = 6;
 export const MIN_FULL_NAME_LENGTH = 3;
 export const USER_QUERY_KEY = 'user';
@@ -15,6 +17,13 @@ export const MAX_CABIN_IMAGE_SIZE = 5 * 1024 * 1024;
 export const CABIN_IMAGES_BUCKET = 'cabin-images';
 
 export const BOOKINGS_QUERY_KEY = 'bookings';
+export const BOOKING_QUERY_KEY = 'booking';
 export const BOOKINGS_BASE_URL = `${import.meta.env.VITE_SUPABASE_URL}/rest/v1/booking`;
 
 export const PAGE_SIZE = import.meta.env.MODE === 'test' ? 2 : 10;
+
+export const bookingStatusToBadgeColorMap: Record<BookingStatus, string> = {
+	unconfirmed: 'blue',
+	'checked-in': 'green',
+	'checked-out': 'silver',
+};

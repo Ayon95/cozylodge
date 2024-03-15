@@ -8,6 +8,19 @@ export const bookingHandlers = [
 	rest.get(BOOKINGS_BASE_URL, (req, res, ctx) => {
 		const url = new URL(req.url);
 
+		// In case of an individual booking, there will be an id query param, e.g. id=eq.1
+		const bookingIdValue = url.searchParams.get('id')?.split('.')[1];
+
+		if (bookingIdValue) {
+			const booking = db.booking.findFirst({
+				where: {
+					id: { equals: Number.parseFloat(bookingIdValue) },
+				},
+			});
+
+			return res(ctx.json(booking));
+		}
+
 		// the query param value will be like 'eq.unconfirmed', ?status=eq.unconfirmed
 		const statusFilterValue = url.searchParams.get('status')?.split('.')[1];
 

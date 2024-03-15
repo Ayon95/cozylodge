@@ -56,6 +56,8 @@ export default createGlobalStyle`
   --fontSize-base: 1.6rem;
   --fontSize-sm: calc(var(--fontSize-base) - 0.2rem);
 
+  --fontFamily-numeric: 'Sono', monospace;
+
   --backdrop-color: rgba(0, 0, 0, 0.3);
 
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
@@ -91,6 +93,7 @@ html {
 body {
   font-family: "Raleway", sans-serif;
   color: var(--color-grey-700);
+  font-weight: 500;
 
   transition: color 0.3s, background-color 0.3s;
   min-height: 100vh;
@@ -231,6 +234,10 @@ FOR DARK MODE
 
 .mt-3 {
   margin-top: 3rem;
+}
+
+.mb-1 {
+  margin-bottom: 1rem;
 }
 
 .text-sm {

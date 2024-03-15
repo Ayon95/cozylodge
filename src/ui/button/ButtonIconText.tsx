@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import styled, { css } from 'styled-components';
 
 interface ButtonIconTextProps {
@@ -13,7 +14,7 @@ const variants = {
 	`,
 };
 
-const ButtonIconText = styled.button<ButtonIconTextProps>`
+const commonButtonStyles = css<ButtonIconTextProps>`
 	display: flex;
 	align-items: center;
 	gap: 5px;
@@ -24,4 +25,10 @@ const ButtonIconText = styled.button<ButtonIconTextProps>`
 	${props => (!props.$variant ? variants['secondary'] : variants[props.$variant])}
 `;
 
-export default ButtonIconText;
+export const ButtonIconText = styled.button<ButtonIconTextProps>`
+	${commonButtonStyles}
+`;
+
+export const LinkButtonIconText = styled(Link)<ButtonIconTextProps>`
+	${commonButtonStyles}
+`;

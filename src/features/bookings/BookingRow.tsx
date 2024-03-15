@@ -1,19 +1,16 @@
 import styled from 'styled-components';
+import { HiEye } from 'react-icons/hi2';
 
 import { Booking, BookingStatus } from '@/types/bookings';
 import Table from '@/ui/Table';
 import { formatPrice, formatDate } from '@/utils/helpers';
 import Badge from '@/ui/Badge';
+import { LinkButtonIconText } from '@/ui/button/ButtonIconText';
+import { bookingStatusToBadgeColorMap } from '@/utils/constants';
 
 interface BookingRowProps {
 	booking: Booking;
 }
-
-const bookingStatusToBadgeColorMap: Record<BookingStatus, string> = {
-	unconfirmed: 'blue',
-	'checked-in': 'green',
-	'checked-out': 'silver',
-};
 
 function BookingRow({ booking }: BookingRowProps) {
 	const { cabin, guest, start_date, end_date, num_nights, total_price, status } = booking;
@@ -36,6 +33,14 @@ function BookingRow({ booking }: BookingRowProps) {
 				<Badge type={bookingStatusToBadgeColorMap[status as BookingStatus]}>{status}</Badge>
 			</Table.Cell>
 			<DarkNumericTextCell label="price">{formatPrice(total_price)}</DarkNumericTextCell>
+			<Table.Cell>
+				<ActionButtonsContainer>
+					<LinkButtonIconText to={`/bookings/${booking.id}`}>
+						<HiEye />
+						<span>Details</span>
+					</LinkButtonIconText>
+				</ActionButtonsContainer>
+			</Table.Cell>
 		</Table.Row>
 	);
 }
@@ -43,6 +48,11 @@ function BookingRow({ booking }: BookingRowProps) {
 export default BookingRow;
 
 const DarkNumericTextCell = styled(Table.Cell)`
-	font-family: 'Sono', monospace;
+	font-family: var(--fontFamily-numeric);
 	color: var(--color-grey-600);
+`;
+
+const ActionButtonsContainer = styled.div`
+	display: flex;
+	gap: 12px;
 `;

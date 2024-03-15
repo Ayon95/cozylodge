@@ -1,6 +1,7 @@
 import { Booking } from '@/types/bookings';
 import { cabins } from './cabins';
 import { guests } from './guests';
+import { user } from './authentication';
 
 export const bookings: Booking[] = [
 	{
@@ -11,16 +12,18 @@ export const bookings: Booking[] = [
 		num_nights: 2,
 		num_guests: cabins[0].max_capacity,
 		status: 'checked-out',
+		cabin_price: cabins[0].regular_price,
+		extra_price: 50,
 		total_price: cabins[0].regular_price + 50,
+		has_breakfast: true,
+		is_paid: true,
 		cabin: {
 			id: cabins[0].id,
 			name: cabins[0].name,
 		},
-		guest: {
-			id: guests[0].id,
-			full_name: guests[0].full_name,
-			email: guests[0].email,
-		},
+		guest: guests[0],
+		observations: 'Test observations',
+		user_id: user.id,
 	},
 
 	{
@@ -31,16 +34,18 @@ export const bookings: Booking[] = [
 		num_nights: 4,
 		num_guests: cabins[1].max_capacity,
 		status: 'checked-in',
+		cabin_price: cabins[1].regular_price,
+		extra_price: 100,
 		total_price: cabins[1].regular_price + 100,
+		has_breakfast: true,
+		is_paid: true,
 		cabin: {
 			id: cabins[1].id,
 			name: cabins[1].name,
 		},
-		guest: {
-			id: guests[1].id,
-			full_name: guests[1].full_name,
-			email: guests[1].email,
-		},
+		guest: guests[1],
+		observations: null,
+		user_id: user.id,
 	},
 
 	{
@@ -51,15 +56,17 @@ export const bookings: Booking[] = [
 		num_nights: 5,
 		num_guests: cabins[1].max_capacity,
 		status: 'unconfirmed',
+		cabin_price: cabins[1].regular_price,
+		extra_price: 150,
 		total_price: cabins[1].regular_price + 150,
+		is_paid: false,
+		has_breakfast: true,
 		cabin: {
 			id: cabins[1].id,
 			name: cabins[1].name,
 		},
-		guest: {
-			id: guests[1].id,
-			full_name: guests[1].full_name,
-			email: guests[1].email,
-		},
+		guest: guests[1],
+		observations: null,
+		user_id: user.id,
 	},
 ];
