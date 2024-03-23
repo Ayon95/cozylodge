@@ -75,6 +75,11 @@ do $$
 declare
   user_id uuid := (select id from auth.users where email = 'user1@example.com');
 begin
+-- create settings
+insert into
+public.settings (min_booking_length, max_booking_length, max_guests_per_booking, breakfast_price, user_id)
+values
+(1, 30, 8, 15, user_id)
 -- create cabins
   insert into
   public.cabin (name, max_capacity, regular_price, discount, description, image_url, user_id)
