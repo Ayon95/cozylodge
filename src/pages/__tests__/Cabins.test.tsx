@@ -12,6 +12,7 @@ import { CABINS_BASE_URL } from '@/utils/constants';
 import { mockServer } from '@/test/mocks/server';
 import { db } from '@/test/mocks/db';
 import { cabins } from '@/test/fixtures/cabins';
+import { settings } from '@/test/fixtures/settings';
 
 const deleteButtonRegex = /delete/i;
 const updateButtonInCellRegex = /update/i;
@@ -254,12 +255,20 @@ describe('Cabins', () => {
 		const user = userEvent.setup();
 		const imageFile = new File(['test'], 'cabin_image.png', { type: 'image/png' });
 		const createCabinForm = await screen.findByRole('form', { name: /create a cabin/i });
+		const maxCapacityInput = within(createCabinForm).getByLabelText(/max capacity/i);
+		const discountInput = within(createCabinForm).getByLabelText(/discount/i);
 
 		await user.type(within(createCabinForm).getByLabelText(/name/i), 'Test name');
 		await user.type(within(createCabinForm).getByLabelText(/description/i), 'Test description');
-		await user.type(within(createCabinForm).getByLabelText(/max capacity/i), '6');
+
+		await user.clear(maxCapacityInput);
+		await user.type(maxCapacityInput, (settings.max_guests_per_booking - 2).toString());
+
 		await user.type(within(createCabinForm).getByLabelText(/price/i), '600');
-		await user.type(within(createCabinForm).getByLabelText(/discount/i), '20');
+
+		await user.clear(discountInput);
+		await user.type(discountInput, '20');
+
 		await user.upload(within(createCabinForm).getByLabelText(/image/i), imageFile);
 		await user.click(within(createCabinForm).getByRole('button', { name: /create cabin/i }));
 
