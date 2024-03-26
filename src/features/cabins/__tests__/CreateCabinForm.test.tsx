@@ -6,11 +6,12 @@ import CreateCabinForm from '../CreateCabinForm';
 import { user } from '@/test/fixtures/authentication';
 import { MAX_CABIN_DISCOUNT, MAX_CABIN_IMAGE_SIZE, MIN_CABIN_NAME_LENGTH } from '@/utils/constants';
 import { MockFile } from '@/test/types';
+import { settings } from '@/test/fixtures/settings';
 
 const submitButtonRegex = /create cabin/i;
 
 function setup() {
-	renderWithQueryClient(<CreateCabinForm userId={user.id} />);
+	renderWithQueryClient(<CreateCabinForm userId={user.id} settings={settings} />);
 }
 
 describe('CreateCabinForm', () => {
@@ -99,6 +100,22 @@ describe('CreateCabinForm', () => {
 		await user.click(screen.getByRole('button', { name: submitButtonRegex }));
 
 		const error = screen.getByText(/max capacity must be greater than 0/i);
+
+		expect(error).toBeInTheDocument();
+	});
+
+	it('should show an error message if max capacity value is greater than max guests per booking', async () => {
+		setup();
+		const user = userEvent.setup();
+		const maxCapacityInput = screen.getByLabelText(/max capacity/i);
+
+		await user.clear(maxCapacityInput);
+		await user.type(maxCapacityInput, (settings.max_guests_per_booking + 1).toString());
+		await user.click(screen.getByRole('button', { name: submitButtonRegex }));
+
+		const error = screen.getByText(
+			`Max capacity cannot be greater than ${settings.max_guests_per_booking}`
+		);
 
 		expect(error).toBeInTheDocument();
 	});

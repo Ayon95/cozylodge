@@ -17,9 +17,10 @@ type Cabin = Tables<'cabin'>;
 
 interface CabinTableProps {
 	cabins: Cabin[];
+	settings: Tables<'settings'>;
 }
 
-function CabinTable({ cabins }: CabinTableProps) {
+function CabinTable({ cabins, settings }: CabinTableProps) {
 	const [selectedCabin, setSelectedCabin] = useState<null | Cabin>(null);
 	const [searchParams] = useSearchParams();
 
@@ -123,7 +124,7 @@ function CabinTable({ cabins }: CabinTableProps) {
 			</Table>
 			{selectedCabin && shouldShowUpdateModal && (
 				<Modal title="Update cabin" onCloseModal={closeUpdateModalForSelectedCabin}>
-					<UpdateCabinForm cabin={selectedCabin} onUpdate={closeUpdateModal} />
+					<UpdateCabinForm cabin={selectedCabin} settings={settings} onUpdate={closeUpdateModal} />
 				</Modal>
 			)}
 			{selectedCabin && shouldShowConfirmDeleteModal && (

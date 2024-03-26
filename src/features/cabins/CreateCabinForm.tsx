@@ -8,41 +8,48 @@ import FormControl from '@/ui/form/FormControl';
 import { MAX_CABIN_DISCOUNT, MAX_CABIN_IMAGE_SIZE, MIN_CABIN_NAME_LENGTH } from '@/utils/constants';
 import { useCreateCabin } from './hooks/useCreateCabin';
 import SpinnerMini from '@/ui/spinner/SpinnerMini';
+import { Tables } from '@/types/database';
 
 interface CreateCabinFormProps {
 	userId: string;
+	settings: Tables<'settings'>;
 }
 
-const formSchema = z.object({
-	name: z
-		.string()
-		.nonempty({ message: 'Cabin name is required' })
-		.min(MIN_CABIN_NAME_LENGTH, {
-			message: `Name must contain at least ${MIN_CABIN_NAME_LENGTH} characters`,
-		}),
-	description: z.string().nonempty({ message: 'Cabin description is required' }),
-	max_capacity: z.coerce
-		.number()
-		.int({ message: 'Max capacity must be a whole number' })
-		.positive({ message: 'Max capacity must be greater than 0' }),
-	regular_price: z.coerce.number().positive({ message: 'Price must be greater than 0' }),
-	discount: z.coerce
-		.number()
-		.int({ message: 'Discount must be a whole number' })
-		.gte(0, { message: 'Discount cannot be negative' })
-		.lte(MAX_CABIN_DISCOUNT, { message: `Discount cannot be greater than ${MAX_CABIN_DISCOUNT}%` }),
-	image: z
-		.custom<FileList>()
-		.refine(files => files.length > 0, { message: 'Cabin image is required' })
-		.refine(files => files?.[0]?.type.startsWith('image'), { message: 'File must be an image' })
-		.refine(files => files?.[0]?.size <= MAX_CABIN_IMAGE_SIZE, {
-			message: `Image file size cannot exceed ${MAX_CABIN_IMAGE_SIZE / (1024 * 1024)}MB`,
-		}),
-});
+function CreateCabinForm({ userId, settings }: CreateCabinFormProps) {
+	const formSchema = z.object({
+		name: z
+			.string()
+			.nonempty({ message: 'Cabin name is required' })
+			.min(MIN_CABIN_NAME_LENGTH, {
+				message: `Name must contain at least ${MIN_CABIN_NAME_LENGTH} characters`,
+			}),
+		description: z.string().nonempty({ message: 'Cabin description is required' }),
+		max_capacity: z.coerce
+			.number()
+			.int({ message: 'Max capacity must be a whole number' })
+			.gt(0, { message: 'Max capacity must be greater than 0' })
+			.lte(settings.max_guests_per_booking, {
+				message: `Max capacity cannot be greater than ${settings.max_guests_per_booking}`,
+			}),
+		regular_price: z.coerce.number().positive({ message: 'Price must be greater than 0' }),
+		discount: z.coerce
+			.number()
+			.int({ message: 'Discount must be a whole number' })
+			.gte(0, { message: 'Discount cannot be negative' })
+			.lte(MAX_CABIN_DISCOUNT, {
+				message: `Discount cannot be greater than ${MAX_CABIN_DISCOUNT}%`,
+			}),
+		image: z
+			.custom<FileList>()
+			.refine(files => files.length > 0, { message: 'Cabin image is required' })
+			.refine(files => files?.[0]?.type.startsWith('image'), { message: 'File must be an image' })
+			.refine(files => files?.[0]?.size <= MAX_CABIN_IMAGE_SIZE, {
+				message: `Image file size cannot exceed ${MAX_CABIN_IMAGE_SIZE / (1024 * 1024)}MB`,
+			}),
+	});
 
-type FormData = z.infer<typeof formSchema>;
+	type FormData = z.infer<typeof formSchema>;
 
-function CreateCabinForm({ userId }: CreateCabinFormProps) {
 	const form = useForm<FormData>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
