@@ -1,19 +1,22 @@
 import styled from 'styled-components';
-import { HiEye } from 'react-icons/hi2';
+import { HiArrowUpOnSquare, HiEye } from 'react-icons/hi2';
 
 import { Booking, BookingStatus } from '@/types/bookings';
 import Table from '@/ui/Table';
 import { formatPrice, formatDate } from '@/utils/helpers';
 import Badge from '@/ui/Badge';
-import { LinkButtonIconText } from '@/ui/button/ButtonIconText';
+import { ButtonIconText, LinkButtonIconText } from '@/ui/button/ButtonIconText';
 import { bookingStatusToBadgeColorMap } from '@/utils/constants';
+import { useCheckOutBooking } from './hooks/useCheckOutBooking';
 
 interface BookingRowProps {
 	booking: Booking;
 }
 
 function BookingRow({ booking }: BookingRowProps) {
-	const { cabin, guest, start_date, end_date, num_nights, total_price, status } = booking;
+	const { id, cabin, guest, start_date, end_date, num_nights, total_price, status } = booking;
+	const checkOutBookingMutation = useCheckOutBooking();
+
 	return (
 		<Table.Row>
 			<DarkNumericTextCell label="cabin">{cabin?.name}</DarkNumericTextCell>
@@ -35,10 +38,24 @@ function BookingRow({ booking }: BookingRowProps) {
 			<DarkNumericTextCell label="price">{formatPrice(total_price)}</DarkNumericTextCell>
 			<Table.Cell>
 				<ActionButtonsContainer>
-					<LinkButtonIconText to={`/bookings/${booking.id}`}>
+					<LinkButtonIconText to={`/bookings/${id}`}>
 						<HiEye />
 						<span>Details</span>
 					</LinkButtonIconText>
+					{status === 'checked-in' && (
+						<ButtonIconText
+							onClick={() =>
+								checkOutBookingMutation.mutate({
+									bookingId: id,
+									updatedData: { status: 'checked-out' },
+								})
+							}
+							disabled={checkOutBookingMutation.isLoading}
+						>
+							<HiArrowUpOnSquare />
+							<span>Check out</span>
+						</ButtonIconText>
+					)}
 				</ActionButtonsContainer>
 			</Table.Cell>
 		</Table.Row>

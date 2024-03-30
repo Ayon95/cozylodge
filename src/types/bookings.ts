@@ -23,3 +23,5 @@ export type BookingSort = {
 };
 
 export type BookingStatus = 'unconfirmed' | 'checked-in' | 'checked-out';
+
+export type BookingUpdateDTO = Partial<Omit<Tables<'booking'>, 'id' | 'created_at' | 'user_id'>>;

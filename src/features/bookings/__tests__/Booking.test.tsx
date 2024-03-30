@@ -1,5 +1,8 @@
 import { screen, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { Toaster } from 'react-hot-toast';
+import { rest } from 'msw';
 
 import Booking from '@/pages/Booking';
 import supabase from '@/services/supabase';
@@ -7,6 +10,9 @@ import { userSession } from '@/test/fixtures/authentication';
 import { renderWithQueryClient } from '@/test/utils';
 import { bookings } from '@/test/fixtures/bookings';
 import { formatDate, formatPrice } from '@/utils/helpers';
+import { db } from '@/test/mocks/db';
+import { mockServer } from '@/test/mocks/server';
+import { BOOKINGS_BASE_URL } from '@/utils/constants';
 
 const dateFormatOptions: Intl.DateTimeFormatOptions = {
 	weekday: 'short',
@@ -22,6 +28,7 @@ function setup(bookingId: number = 1) {
 			<Routes>
 				<Route path="bookings/:bookingId" element={<Booking />} />
 			</Routes>
+			<Toaster />
 		</MemoryRouter>
 	);
 }
@@ -139,5 +146,54 @@ describe('Booking', () => {
 		[paymentSummaryTitle, paymentStatus, cabinPrice, extraPrice, breakfastText, totalPrice].forEach(
 			element => expect(element).toBeInTheDocument()
 		);
+	});
+
+	it('should have a checkout button if the booking status is checked-in', async () => {
+		setup(2);
+		const checkoutButton = await screen.findByRole('button', { name: /check out/i });
+		expect(checkoutButton).toBeInTheDocument();
+	});
+
+	it('should show success message and updated status if a checked-in booking is checked-out', async () => {
+		setup(2);
+		const user = userEvent.setup();
+		const checkoutButton = await screen.findByRole('button', { name: /check out/i });
+
+		await user.click(checkoutButton);
+
+		const successMessage = await screen.findByText(
+			`Booking #${bookings[1].id} updated successfully!`
+		);
+		const checkedOutStatus = screen.getByText(/checked-out/i);
+
+		expect(successMessage).toBeInTheDocument();
+		expect(checkedOutStatus).toBeInTheDocument();
+
+		// Resetting status of the updated booking
+
+		db.booking.update({
+			where: { id: { equals: bookings[1].id } },
+			data: { status: 'checked-in' },
+		});
+	});
+
+	it('should show update error message if a checked-in booking cannot be updated', async () => {
+		mockServer.use(
+			rest.patch(BOOKINGS_BASE_URL, (_req, res) => {
+				return res.networkError('A network error occurred');
+			})
+		);
+
+		setup(2);
+		const user = userEvent.setup();
+		const checkoutButton = await screen.findByRole('button', { name: /check out/i });
+
+		await user.click(checkoutButton);
+
+		const errorMessage = screen.getByText(/booking could not be updated/i);
+		const checkedOutStatus = screen.queryByText(/checked-out/i);
+
+		expect(errorMessage).toBeInTheDocument();
+		expect(checkedOutStatus).not.toBeInTheDocument();
 	});
 });

@@ -1,6 +1,8 @@
 import { screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { rest } from 'msw';
+import { Toaster } from 'react-hot-toast';
+import { MemoryRouter } from 'react-router-dom';
 
 import supabase from '@/services/supabase';
 import { userSession } from '@/test/fixtures/authentication';
@@ -8,10 +10,10 @@ import { renderWithQueryClient } from '@/test/utils';
 import Bookings from '../Bookings';
 import { mockServer } from '@/test/mocks/server';
 import { BOOKINGS_BASE_URL, PAGE_SIZE } from '@/utils/constants';
-import { MemoryRouter } from 'react-router-dom';
 import { bookings } from '@/test/fixtures/bookings';
 import { cabins } from '@/test/fixtures/cabins';
 import { guests } from '@/test/fixtures/guests';
+import { db } from '@/test/mocks/db';
 
 function setup() {
 	renderWithQueryClient(
@@ -28,6 +30,7 @@ function setupWithLogin(initialPath: string = '') {
 	renderWithQueryClient(
 		<MemoryRouter initialEntries={[initialPath]}>
 			<Bookings />
+			<Toaster />
 		</MemoryRouter>
 	);
 }
@@ -260,5 +263,60 @@ describe('Bookings', () => {
 		expect(paginationTextElement).toBeInTheDocument();
 		expect(firstBookingCells[0]).toHaveTextContent(cabins[0].name);
 		expect(firstBookingCells[1]).toHaveTextContent(`${guests[0].full_name}${guests[0].email}`);
+	});
+
+	it('should show updated booking and a success message if a checked-in booking is checked out', async () => {
+		setupWithLogin();
+		const user = userEvent.setup();
+
+		const bookingRows = await screen.findAllByRole('row');
+		const checkoutButton = within(bookingRows[2]).getByRole('button', { name: /check out/i });
+
+		await user.click(checkoutButton);
+
+		const successMessage = await screen.findByText(
+			`Booking #${bookings[1].id} updated successfully!`
+		);
+
+		const updatedBookingRows = screen.getAllByRole('row');
+		const checkedOutStatusCell = within(updatedBookingRows[2]).getByRole('cell', {
+			name: /checked-out/i,
+		});
+
+		expect(successMessage).toBeInTheDocument();
+		expect(checkedOutStatusCell).toBeInTheDocument();
+
+		// Resetting status of the updated booking
+
+		db.booking.update({
+			where: { id: { equals: bookings[1].id } },
+			data: { status: 'checked-in' },
+		});
+	});
+
+	it('should show update error message if a booking cannot be updated', async () => {
+		mockServer.use(
+			rest.patch(BOOKINGS_BASE_URL, (_req, res) => {
+				return res.networkError('A network error occurred');
+			})
+		);
+
+		setupWithLogin();
+		const user = userEvent.setup();
+
+		const bookingRows = await screen.findAllByRole('row');
+		const checkoutButton = within(bookingRows[2]).getByRole('button', { name: /check out/i });
+
+		await user.click(checkoutButton);
+
+		const errorMessage = await screen.findByText(/booking could not be updated/i);
+
+		const updatedBookingRows = screen.getAllByRole('row');
+		const checkedOutStatusCell = within(updatedBookingRows[2]).queryByRole('cell', {
+			name: /checked-out/i,
+		});
+
+		expect(errorMessage).toBeInTheDocument();
+		expect(checkedOutStatusCell).not.toBeInTheDocument();
 	});
 });

@@ -3,6 +3,7 @@ import { SortDirection } from '@mswjs/data/lib/query/queryTypes';
 
 import { BOOKINGS_BASE_URL, PAGE_SIZE } from '@/utils/constants';
 import { db } from '../db';
+import { getIdFromQueryString } from '@/utils/helpers';
 
 export const bookingHandlers = [
 	rest.get(BOOKINGS_BASE_URL, (req, res, ctx) => {
@@ -87,5 +88,12 @@ export const bookingHandlers = [
 
 		const bookings = db.booking.getAll();
 		return res(ctx.json(bookings));
+	}),
+	rest.patch(BOOKINGS_BASE_URL, async (req, res, ctx) => {
+		const bookingId = getIdFromQueryString(req.url);
+		const data = await req.json();
+
+		const updatedBooking = db.booking.update({ where: { id: { equals: bookingId } }, data });
+		return res(ctx.json(updatedBooking), ctx.status(204));
 	}),
 ];
