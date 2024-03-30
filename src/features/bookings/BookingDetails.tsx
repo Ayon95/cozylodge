@@ -9,6 +9,9 @@ import { Booking, BookingStatus } from '@/types/bookings';
 import { formatDate } from '@/utils/helpers';
 import BookingGuestDetailsTable from './BookingGuestDetailsTable';
 import BookingPaymentSummary from './BookingPaymentSummary';
+import { Button } from '@/ui/button/Button';
+import { useCheckOutBooking } from './hooks/useCheckOutBooking';
+import SpinnerMini from '@/ui/spinner/SpinnerMini';
 
 interface BookingProps {
 	booking: Booking;
@@ -22,6 +25,7 @@ const dateFormatOptions: Intl.DateTimeFormatOptions = {
 };
 
 function BookingDetails({ booking }: BookingProps) {
+	const checkOutBookingMutation = useCheckOutBooking();
 	return (
 		<Container>
 			<Header>
@@ -92,6 +96,20 @@ function BookingDetails({ booking }: BookingProps) {
 					}}
 				/>
 			</Grid>
+			{booking.status === 'checked-in' && (
+				<Button
+					className="mt-3"
+					onClick={() =>
+						checkOutBookingMutation.mutate({
+							bookingId: booking.id,
+							updatedData: { status: 'checked-out' },
+						})
+					}
+					disabled={checkOutBookingMutation.isLoading}
+				>
+					{checkOutBookingMutation.isLoading ? <SpinnerMini /> : 'Check Out'}
+				</Button>
+			)}
 		</Container>
 	);
 }

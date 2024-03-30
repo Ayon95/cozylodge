@@ -1,4 +1,4 @@
-import { BookingFilter, BookingSort } from '@/types/bookings';
+import { BookingFilter, BookingSort, BookingUpdateDTO } from '@/types/bookings';
 import supabase from './supabase';
 import { PAGE_SIZE } from '@/utils/constants';
 
@@ -81,4 +81,26 @@ export async function getBooking(bookingId: string | undefined, userId: string |
 	}
 
 	return booking;
+}
+
+export async function updateBooking({
+	bookingId,
+	updatedData,
+}: {
+	bookingId: number;
+	updatedData: BookingUpdateDTO;
+}) {
+	const { data, error } = await supabase
+		.from('booking')
+		.update(updatedData)
+		.eq('id', bookingId)
+		.select()
+		.single();
+
+	if (error) {
+		console.error(error);
+		throw new Error('Booking could not be updated');
+	}
+
+	return data;
 }
