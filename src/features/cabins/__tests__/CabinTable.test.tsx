@@ -4,11 +4,12 @@ import { renderWithQueryClient } from '@/test/utils';
 import CabinTable from '../CabinTable';
 import { cabins } from '@/test/fixtures/cabins';
 import { MemoryRouter } from 'react-router-dom';
+import { settings } from '@/test/fixtures/settings';
 
 function setup() {
 	renderWithQueryClient(
 		<MemoryRouter>
-			<CabinTable cabins={cabins} />
+			<CabinTable cabins={cabins} settings={settings} />
 		</MemoryRouter>
 	);
 }
