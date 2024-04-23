@@ -15,6 +15,8 @@ import { cabins } from '@/test/fixtures/cabins';
 import { guests } from '@/test/fixtures/guests';
 import { db } from '@/test/mocks/db';
 
+const confirmDeleteModalTitleRegex = /are you sure you want to delete?/i;
+
 function setup() {
 	renderWithQueryClient(
 		<MemoryRouter>
@@ -318,5 +320,63 @@ describe('Bookings', () => {
 
 		expect(errorMessage).toBeInTheDocument();
 		expect(checkedOutStatusCell).not.toBeInTheDocument();
+	});
+
+	it('should delete a booking after confirmation and show a deletion success message', async () => {
+		setupWithLogin();
+
+		const user = userEvent.setup();
+		// The first row is the column header row
+		const bookingRows = (await screen.findAllByRole('row')).slice(1);
+		const firstBookingDeleteButton = within(bookingRows[0]).getByRole('button', {
+			name: /delete/i,
+		});
+
+		await user.click(firstBookingDeleteButton);
+
+		const confirmDeleteModal = screen.getByRole('dialog', {
+			name: confirmDeleteModalTitleRegex,
+		});
+		const confirmDeleteButton = within(confirmDeleteModal).getByRole('button', {
+			name: /delete/i,
+		});
+
+		await user.click(confirmDeleteButton);
+
+		const toast = await screen.findByText(/booking deleted successfully!/i);
+
+		expect(toast).toBeInTheDocument();
+		expect(confirmDeleteModal).not.toBeInTheDocument();
+		expect(bookingRows[0]).not.toBeInTheDocument();
+
+		// Reset booking data in the database by adding back the first booking
+		db.booking.create(bookings[0]);
+	});
+
+	it('should show deletion error message if a booking cannot be deleted', async () => {
+		mockServer.use(
+			rest.delete(BOOKINGS_BASE_URL, (_req, res) => {
+				return res.networkError('A network error occurred');
+			})
+		);
+
+		setupWithLogin();
+
+		const user = userEvent.setup();
+		const bookingRows = (await screen.findAllByRole('row')).slice(1);
+		const firstBookingDeleteButton = within(bookingRows[0]).getByRole('button', {
+			name: /delete/i,
+		});
+
+		await user.click(firstBookingDeleteButton);
+
+		const confirmDeleteModal = screen.getByRole('dialog', { name: confirmDeleteModalTitleRegex });
+		const confirmDeleteButton = within(confirmDeleteModal).getByRole('button', { name: /delete/i });
+
+		await user.click(confirmDeleteButton);
+
+		const toast = await screen.findByText(/booking could not be deleted/i);
+
+		expect(toast).toBeInTheDocument();
 	});
 });

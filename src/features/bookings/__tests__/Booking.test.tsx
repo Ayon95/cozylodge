@@ -13,6 +13,7 @@ import { formatDate, formatPrice } from '@/utils/helpers';
 import { db } from '@/test/mocks/db';
 import { mockServer } from '@/test/mocks/server';
 import { BOOKINGS_BASE_URL } from '@/utils/constants';
+import Bookings from '@/pages/Bookings';
 
 const dateFormatOptions: Intl.DateTimeFormatOptions = {
 	weekday: 'short',
@@ -21,11 +22,14 @@ const dateFormatOptions: Intl.DateTimeFormatOptions = {
 	year: 'numeric',
 };
 
+const confirmDeleteModalTitleRegex = /are you sure you want to delete?/i;
+
 function setup(bookingId: number = 1) {
 	vi.spyOn(supabase.auth, 'getSession').mockResolvedValue(userSession);
 	renderWithQueryClient(
 		<MemoryRouter initialEntries={[`/bookings/${bookingId}`]}>
 			<Routes>
+				<Route path="bookings" element={<Bookings />} />
 				<Route path="bookings/:bookingId" element={<Booking />} />
 			</Routes>
 			<Toaster />
@@ -195,5 +199,54 @@ describe('Booking', () => {
 
 		expect(errorMessage).toBeInTheDocument();
 		expect(checkedOutStatus).not.toBeInTheDocument();
+	});
+
+	it('should have a delete button', async () => {
+		setup();
+		const deleteButton = await screen.findByRole('button', { name: /delete/i });
+		expect(deleteButton).toBeInTheDocument();
+	});
+
+	it('should show confirm delete modal when delete button is clicked', async () => {
+		setup();
+
+		const user = userEvent.setup();
+		const deleteButton = await screen.findByRole('button', { name: /delete/i });
+
+		await user.click(deleteButton);
+
+		const confirmDeleteModal = screen.getByRole('dialog', {
+			name: confirmDeleteModalTitleRegex,
+		});
+		const confirmDeleteButton = within(confirmDeleteModal).getByRole('button', {
+			name: /delete/i,
+		});
+
+		expect(confirmDeleteModal).toBeInTheDocument();
+		expect(confirmDeleteButton).toBeInTheDocument();
+	});
+
+	it('should show deletion error message if a booking cannot be deleted', async () => {
+		mockServer.use(
+			rest.delete(BOOKINGS_BASE_URL, (_req, res) => {
+				return res.networkError('A network error occurred');
+			})
+		);
+
+		setup();
+
+		const user = userEvent.setup();
+		const deleteButton = await screen.findByRole('button', { name: /delete/i });
+
+		await user.click(deleteButton);
+
+		const confirmDeleteModal = screen.getByRole('dialog', { name: confirmDeleteModalTitleRegex });
+		const confirmDeleteButton = within(confirmDeleteModal).getByRole('button', { name: /delete/i });
+
+		await user.click(confirmDeleteButton);
+
+		const toast = await screen.findByText(/booking could not be deleted/i);
+
+		expect(toast).toBeInTheDocument();
 	});
 });

@@ -96,4 +96,9 @@ export const bookingHandlers = [
 		const updatedBooking = db.booking.update({ where: { id: { equals: bookingId } }, data });
 		return res(ctx.json(updatedBooking), ctx.status(204));
 	}),
+	rest.delete(BOOKINGS_BASE_URL, (req, res, ctx) => {
+		const bookingId = getIdFromQueryString(req.url);
+		db.booking.delete({ where: { id: { equals: bookingId } } });
+		return res(ctx.status(204));
+	}),
 ];

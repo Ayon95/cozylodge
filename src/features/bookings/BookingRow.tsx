@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { HiArrowUpOnSquare, HiEye } from 'react-icons/hi2';
+import { HiArrowUpOnSquare, HiEye, HiOutlineTrash } from 'react-icons/hi2';
 
 import { Booking, BookingStatus } from '@/types/bookings';
 import Table from '@/ui/Table';
@@ -11,9 +11,10 @@ import { useCheckOutBooking } from './hooks/useCheckOutBooking';
 
 interface BookingRowProps {
 	booking: Booking;
+	onClickDelete: (booking: Booking) => void;
 }
 
-function BookingRow({ booking }: BookingRowProps) {
+function BookingRow({ booking, onClickDelete }: BookingRowProps) {
 	const { id, cabin, guest, start_date, end_date, num_nights, total_price, status } = booking;
 	const checkOutBookingMutation = useCheckOutBooking();
 
@@ -56,6 +57,15 @@ function BookingRow({ booking }: BookingRowProps) {
 							<span>Check out</span>
 						</ButtonIconText>
 					)}
+					<ButtonIconText
+						type="button"
+						aria-haspopup="dialog"
+						$variant="danger"
+						onClick={() => onClickDelete(booking)}
+					>
+						<HiOutlineTrash />
+						<span>Delete</span>
+					</ButtonIconText>
 				</ActionButtonsContainer>
 			</Table.Cell>
 		</Table.Row>
@@ -71,5 +81,7 @@ const DarkNumericTextCell = styled(Table.Cell)`
 
 const ActionButtonsContainer = styled.div`
 	display: flex;
-	gap: 12px;
+	flex-direction: column;
+	flex-wrap: wrap;
+	gap: 8px;
 `;
