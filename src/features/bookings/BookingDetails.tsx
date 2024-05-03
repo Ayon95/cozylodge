@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { HiArrowLeft, HiOutlineHomeModern } from 'react-icons/hi2';
 
@@ -34,8 +35,19 @@ function BookingDetails({ booking }: BookingProps) {
 		closeModal: closeConfirmDeleteModal,
 	} = useModal();
 
+	const navigate = useNavigate();
 	const deleteBookingMutation = useDeleteBooking();
 	const checkOutBookingMutation = useCheckOutBooking();
+
+	function handleDeleteBooking() {
+		deleteBookingMutation.mutate(booking.id, {
+			onSuccess: () => {
+				setTimeout(() => {
+					navigate('/bookings', { replace: true });
+				}, 1000);
+			},
+		});
+	}
 
 	return (
 		<>
@@ -130,7 +142,7 @@ function BookingDetails({ booking }: BookingProps) {
 			{shouldShowConfirmDeleteModal && (
 				<ConfirmDeleteModal
 					resourceName={`booking ${booking.id}`}
-					onConfirmDelete={() => deleteBookingMutation.mutate(booking.id)}
+					onConfirmDelete={handleDeleteBooking}
 					onCloseModal={closeConfirmDeleteModal}
 					isDeleting={deleteBookingMutation.isLoading}
 				/>
